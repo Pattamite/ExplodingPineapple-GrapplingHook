@@ -33,6 +33,15 @@ void UHookInput::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
     UpdateInput();
 }
 
+void UHookInput::ButtonPress() {
+    GEngine->AddOnScreenDebugMessage(
+        -1,
+        1.0f,
+        FColor::Yellow,
+        FString::Printf(TEXT("Button Press"))
+    );
+}
+
 void UHookInput::BindingInputComponent()
 {
     owner->InputComponent->BindAxis(HookHorizontalAxisName);
@@ -54,7 +63,7 @@ void UHookInput::UpdateInputValue(float x, float y)
 
     /*GEngine->AddOnScreenDebugMessage(
         -1,
-        0.0f,
+        0.2f,
         FColor::Red,
         FString::Printf(TEXT("Current Input: x: %f, y: %f"), currentInput.X, currentInput.Y)
     );*/
@@ -62,15 +71,24 @@ void UHookInput::UpdateInputValue(float x, float y)
 
 void UHookInput::CheckInputRealease()
 {
-    if (currentInput.IsZero() && previousInput.Size() >= inputTreshold)
+    if (currentInput.IsZero() && previousInput.Size() >= inputTreshold && !lastInputBuffer)
     {
-        float angle = FMath::RadiansToDegrees(FGenericPlatformMath::Atan2(previousInput.Y, previousInput.X));
-        GEngine->AddOnScreenDebugMessage(
-            -1,
-            1.0f,
-            FColor::Yellow,
-            FString::Printf(TEXT("Hook at: %f degree"), angle)
-        );
+        lastInputBuffer = true;
+        hookAngle = FMath::RadiansToDegrees(FGenericPlatformMath::Atan2(previousInput.Y, previousInput.X));
+    }
+    else if (lastInputBuffer)
+    {
+        if (currentInput.IsZero()) {
+            //Fire Hook
+            GEngine->AddOnScreenDebugMessage(
+                -1,
+                1.0f,
+                FColor::Yellow,
+                FString::Printf(TEXT("Hook at: %f degree"), hookAngle)
+            );
+        }
+
+        lastInputBuffer = false;
     }
 }
 

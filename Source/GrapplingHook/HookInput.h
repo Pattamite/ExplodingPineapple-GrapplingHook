@@ -34,6 +34,8 @@ private:
     void UpdateInput();
     void UpdateInputValue(float x, float y);
     void CheckInputRealease();
+    UFUNCTION(BlueprintCallable, Category = "AnyString")
+        void ButtonPress();
 
     AActor* owner;
     FVector2D currentInput = FVector2D(0.0f, 0.0f);
@@ -42,5 +44,7 @@ private:
     FName HookVerticalAxisName = "HookVertical";
     UPROPERTY(EditAnywhere)
         float inputTreshold = 0.5f;
+    bool lastInputBuffer = false;
+    float hookAngle = 0.0f;
 	
 };
