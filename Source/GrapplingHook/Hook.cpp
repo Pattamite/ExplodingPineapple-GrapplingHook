@@ -25,3 +25,18 @@ void AHook::Tick(float DeltaTime)
 
 }
 
+void AHook::Setup(UStaticMeshComponent* RootSM, UStaticMeshComponent* TargetSM)
+{
+	FConstraintInstance ConstraintInstance;
+	UPhysicsConstraintComponent* ConstraintComp = NewObject<UPhysicsConstraintComponent>(RootSM);
+	if (!ConstraintComp)
+	{
+		//UE_LOG constraint UObject could not be created!
+		return;
+	}
+
+	ConstraintComp->SetWorldLocation(GetActorLocation());
+	ConstraintComp->AttachTo(GetRootComponent(), NAME_None, EAttachLocation::KeepWorldPosition);
+	ConstraintComp->SetConstrainedComponents(RootSM, NAME_None, TargetSM, NAME_None);
+}
+

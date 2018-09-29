@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Engine/StaticMeshActor.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "PhysicsEngine/ConstraintInstance.h"
+#include "Components/StaticMeshComponent.h"
+
 #include "Hook.generated.h"
 
 UCLASS()
@@ -23,6 +28,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	UFUNCTION(BlueprintCallable, Category="AnyString")
+	void Setup(UStaticMeshComponent* RootSMA, UStaticMeshComponent* TargetSMA);
 };
