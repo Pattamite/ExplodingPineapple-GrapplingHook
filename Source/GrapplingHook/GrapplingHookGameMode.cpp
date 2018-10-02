@@ -6,5 +6,5 @@
 AGrapplingHookGameMode::AGrapplingHookGameMode()
 {
     // Set default pawn class to our character
-    DefaultPawnClass = AGrapplingHookCharacter::StaticClass();	
+    //DefaultPawnClass = AGrapplingHookCharacter::StaticClass();	
 }
