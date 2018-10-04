@@ -40,9 +40,10 @@ public:
 
 private:
     void BindingInputComponent();
-    void UpdateInput();
-    void UpdateInputValue(float x, float y);
-    void CheckInputRealease();
+    void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
+    void TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location);
+    void TouchStop(ETouchIndex::Type FingerIndex, FVector Location);
+    int GetFingerIndexName(ETouchIndex::Type FingerIndex) const;
     UFUNCTION(BlueprintCallable, Category = "UI Button")
         void ButtonPress();
     UFUNCTION(BlueprintCallable, Category = "UI Button")
@@ -51,15 +52,16 @@ private:
         void JumpButtonPress();
 
     AActor* owner;
-    FVector2D currentInput = FVector2D(0.0f, 0.0f);
-    FVector2D previousInput = FVector2D(0.0f, 0.0f);
-    FName HookHorizontalAxisName = "HookHorizontal";
-    FName HookVerticalAxisName = "HookVertical";
-    FName CutHookActionName = "CutHook";
+
+    bool isTouched = false;
+    int currentTouchIndex = 0;
+    FVector currentInput = FVector(0.0f, 0.0f, 0.0f);
+    FVector startInput = FVector(0.0f, 0.0f, 0.0f);
     UPROPERTY(EditAnywhere)
-        float inputTreshold = 0.5f;
-    bool lastInputBuffer = false;
+        float inputTreshold = 20.0f;
     FVector hookAngleVector = FVector(0.0f, 0.0f, 0.0f);
+
+
+    FName CutHookActionName = "CutHook";
     
-	
 };

@@ -107,13 +107,13 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 void APlayerCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// Jump on any touch
-	Jump();
+	// Jump();
 }
 
 void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// Cease jumping once touch stopped
-	StopJumping();
+	// StopJumping();
 }
 
 void APlayerCharacter::UpdateCharacter()
