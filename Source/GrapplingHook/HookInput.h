@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Delegates/Delegate.h"
 #include "Components/ActorComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/InputComponent.h"
@@ -11,6 +12,8 @@
 #include "Math/UnrealMathUtility.h"
 #include "HookInput.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FVectorDelegate, FVector, vector);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVoidDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRAPPLINGHOOK_API UHookInput : public UActorComponent
@@ -28,23 +31,37 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    UPROPERTY(BlueprintAssignable, Category = "Hook Input")
+        FVectorDelegate OnHookCommand;
+    UPROPERTY(BlueprintAssignable, Category = "Hook Input")
+        FVoidDelegate OnUnHookCommand;
+    UPROPERTY(BlueprintAssignable, Category = "Hook Input")
+        FVoidDelegate OnJumpCommand;
 
 private:
     void BindingInputComponent();
-    void UpdateInput();
-    void UpdateInputValue(float x, float y);
-    void CheckInputRealease();
-    UFUNCTION(BlueprintCallable, Category = "AnyString")
+    void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
+    void TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location);
+    void TouchStop(ETouchIndex::Type FingerIndex, FVector Location);
+    int GetFingerIndexName(ETouchIndex::Type FingerIndex) const;
+    UFUNCTION(BlueprintCallable, Category = "UI Button")
         void ButtonPress();
+    UFUNCTION(BlueprintCallable, Category = "UI Button")
+        void UnHookButtonPress();
+    UFUNCTION(BlueprintCallable, Category = "UI Button")
+        void JumpButtonPress();
 
     AActor* owner;
-    FVector2D currentInput = FVector2D(0.0f, 0.0f);
-    FVector2D previousInput = FVector2D(0.0f, 0.0f);
-    FName HookHorizontalAxisName = "HookHorizontal";
-    FName HookVerticalAxisName = "HookVertical";
+
+    bool isTouched = false;
+    int currentTouchIndex = 0;
+    FVector currentInput = FVector(0.0f, 0.0f, 0.0f);
+    FVector startInput = FVector(0.0f, 0.0f, 0.0f);
     UPROPERTY(EditAnywhere)
-        float inputTreshold = 0.5f;
-    bool lastInputBuffer = false;
-    float hookAngle = 0.0f;
-	
+        float inputTreshold = 20.0f;
+    FVector hookAngleVector = FVector(0.0f, 0.0f, 0.0f);
+
+
+    FName CutHookActionName = "CutHook";
+    
 };

@@ -29,8 +29,6 @@ void UHookInput::BeginPlay()
 void UHookInput::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-    UpdateInput();
 }
 
 void UHookInput::ButtonPress() {
@@ -44,51 +42,87 @@ void UHookInput::ButtonPress() {
 
 void UHookInput::BindingInputComponent()
 {
-    owner->InputComponent->BindAxis(HookHorizontalAxisName);
-    owner->InputComponent->BindAxis(HookVerticalAxisName);
+    owner->InputComponent->BindTouch(IE_Pressed, this, &UHookInput::TouchStart);
+    owner->InputComponent->BindTouch(IE_Repeat, this, &UHookInput::TouchRepeat);
+    owner->InputComponent->BindTouch(IE_Released, this, &UHookInput::TouchStop);
 }
 
-void UHookInput::UpdateInput()
+void UHookInput::UnHookButtonPress()
 {
-    float xInput = owner->InputComponent->GetAxisValue(HookHorizontalAxisName);
-    float yInput = owner->InputComponent->GetAxisValue(HookVerticalAxisName);
-    UpdateInputValue(xInput, yInput);
-    CheckInputRealease();
+    OnUnHookCommand.Broadcast();
 }
 
-void UHookInput::UpdateInputValue(float x, float y)
+void UHookInput::JumpButtonPress()
 {
-    previousInput = currentInput;
-    currentInput.Set(x, y);
-
-    /*GEngine->AddOnScreenDebugMessage(
-        -1,
-        0.2f,
-        FColor::Red,
-        FString::Printf(TEXT("Current Input: x: %f, y: %f"), currentInput.X, currentInput.Y)
-    );*/
+    OnJumpCommand.Broadcast();
 }
 
-void UHookInput::CheckInputRealease()
+void UHookInput::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if (currentInput.IsZero() && previousInput.Size() >= inputTreshold && !lastInputBuffer)
+    if (!isTouched)
     {
-        lastInputBuffer = true;
-        hookAngle = FMath::RadiansToDegrees(FGenericPlatformMath::Atan2(previousInput.Y, previousInput.X));
+        startInput = Location;
+        currentTouchIndex = GetFingerIndexName(FingerIndex);
+        isTouched = true;
     }
-    else if (lastInputBuffer)
+}
+
+void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
+{
+    if (GetFingerIndexName(FingerIndex) == currentTouchIndex)
     {
-        if (currentInput.IsZero()) {
-            //Fire Hook
-            GEngine->AddOnScreenDebugMessage(
-                -1,
-                1.0f,
-                FColor::Yellow,
-                FString::Printf(TEXT("Hook at: %f degree"), hookAngle)
-            );
+        currentInput = Location;
+    }
+}
+
+void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
+{
+    if (GetFingerIndexName(FingerIndex) == currentTouchIndex)
+    {
+        currentInput = Location;
+
+        FVector DragDistance = currentInput - startInput;
+        DragDistance.Set(DragDistance.X, DragDistance.Y * -1.0f, 0.0f);
+
+        if (DragDistance.Size() > inputTreshold)
+        {
+            OnHookCommand.Broadcast(FVector(DragDistance.X * -1.0f, 0.0f, DragDistance.Y * -1.0f));
+        }
+        else
+        {
+            OnUnHookCommand.Broadcast();
         }
 
-        lastInputBuffer = false;
+        isTouched = false;
+    }
+}
+
+int UHookInput::GetFingerIndexName(ETouchIndex::Type FingerIndex) const
+{
+    switch (FingerIndex)
+    {
+        case ETouchIndex::Touch1:
+            return 1;
+        case ETouchIndex::Touch2:
+            return 2;
+        case ETouchIndex::Touch3:
+            return 3;
+        case ETouchIndex::Touch4:
+            return 4;
+        case ETouchIndex::Touch5:
+            return 5;
+        case ETouchIndex::Touch6:
+            return 6;
+        case ETouchIndex::Touch7:
+            return 7;
+        case ETouchIndex::Touch8:
+            return 8;
+        case ETouchIndex::Touch9:
+            return 9;
+        case ETouchIndex::Touch10:
+            return 10;
+        default:
+            return -1;
     }
 }
 
