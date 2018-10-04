@@ -2,6 +2,9 @@
 
 #include "GrapplingHookGameMode.h"
 #include "GrapplingHookCharacter.h"
+#include "GrapplingHook.h"
+#include "EngineUtils.h"
+
 
 AGrapplingHookGameMode::AGrapplingHookGameMode()
 {

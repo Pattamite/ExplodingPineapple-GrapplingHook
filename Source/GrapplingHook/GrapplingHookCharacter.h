@@ -48,6 +48,10 @@ protected:
 
     void UpdateCharacter();
 
+	void SaveGame();
+
+	void LoadGame();
+
     /** Handle touch inputs. */
     void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
