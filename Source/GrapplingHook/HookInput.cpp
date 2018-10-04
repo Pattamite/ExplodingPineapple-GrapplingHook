@@ -74,21 +74,32 @@ void UHookInput::CheckInputRealease()
     if (currentInput.IsZero() && previousInput.Size() >= inputTreshold && !lastInputBuffer)
     {
         lastInputBuffer = true;
-        hookAngle = FMath::RadiansToDegrees(FGenericPlatformMath::Atan2(previousInput.Y, previousInput.X));
+        hookAngleVector.Set(previousInput.X * -1.0f , 0.0f, previousInput.Y * -1.0f);
     }
     else if (lastInputBuffer)
     {
         if (currentInput.IsZero()) {
             //Fire Hook
-            GEngine->AddOnScreenDebugMessage(
+            /*GEngine->AddOnScreenDebugMessage(
                 -1,
                 1.0f,
                 FColor::Yellow,
-                FString::Printf(TEXT("Hook at: %f degree"), hookAngle)
-            );
+                FString::Printf(TEXT("Hook at: %s degree"), *(hookAngleVector.ToString()))
+            );*/
+            OnHookCommand.Broadcast(hookAngleVector);
         }
 
         lastInputBuffer = false;
     }
+}
+
+void UHookInput::UnHookButtonPress()
+{
+    OnUnHookCommand.Broadcast();
+}
+
+void UHookInput::JumpButtonPress()
+{
+    OnJumpCommand.Broadcast();
 }
 

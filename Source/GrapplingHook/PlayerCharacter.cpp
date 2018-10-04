@@ -125,3 +125,8 @@ void APlayerCharacter::UpdateCharacter()
 	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
 }
 
+void APlayerCharacter::CallJump()
+{
+    Jump();
+}
+
