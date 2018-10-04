@@ -56,6 +56,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
 
+    UFUNCTION(BlueprintCallable, Category = "Action")
+        void CallJump();
+
 public:
 	APlayerCharacter();
 

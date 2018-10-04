@@ -107,13 +107,13 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 void APlayerCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// Jump on any touch
-	Jump();
+	// Jump();
 }
 
 void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// Cease jumping once touch stopped
-	StopJumping();
+	// StopJumping();
 }
 
 void APlayerCharacter::UpdateCharacter()
@@ -122,6 +122,12 @@ void APlayerCharacter::UpdateCharacter()
 	UpdateAnimation();
 
 	// Move right endless
-	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	if (CanJump())
+		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+}
+
+void APlayerCharacter::CallJump()
+{
+    Jump();
 }
 
