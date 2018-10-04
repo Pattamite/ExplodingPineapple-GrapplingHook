@@ -122,6 +122,7 @@ void APlayerCharacter::UpdateCharacter()
 	UpdateAnimation();
 
 	// Move right endless
-	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	if (CanJump())
+		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
 }
 
