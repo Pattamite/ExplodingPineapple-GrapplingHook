@@ -16,6 +16,15 @@ class UTextRenderComponent;
  * The CharacterMovementComponent (inherited from ACharacter) handles movement of the collision capsule
  * The Sprite component (inherited from APaperCharacter) handles the visuals
  */
+
+USTRUCT(BlueprintType)
+struct FCharacterData {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int score;
+};
+
 UCLASS(config=Game)
 class AGrapplingHookCharacter : public APaperCharacter
 {
@@ -69,4 +78,8 @@ public:
     FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
     /** Returns CameraBoom subobject **/
     FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	FCharacterData characterStats;
+
 };

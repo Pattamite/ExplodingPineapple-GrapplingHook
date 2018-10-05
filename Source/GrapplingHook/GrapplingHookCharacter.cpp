@@ -11,11 +11,12 @@
 #include "Camera/CameraComponent.h"
 #include "MySaveGame.h"
 #include "GrapplingHook.h"
+#include "EngineUtils.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
-static int scorePlayer = 1;
-static int loadScorePlayer = 0;
+int scorePlayer = 1;
 
 //////////////////////////////////////////////////////////////////////////
 // AGrapplingHookCharacter
@@ -81,7 +82,8 @@ AGrapplingHookCharacter::AGrapplingHookCharacter()
     bReplicates = true;
 
 	//Default Value
-	
+	characterStats.score = 1;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,10 +113,11 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 		 SaveGame();
 	 }
 	 
-	 if (scorePlayer == 300) {
+	 if (scorePlayer >= 300) {
 		 LoadGame();
 	 }
-	 UE_LOG(LogClass, Warning, TEXT("%d"),loadScorePlayer);
+
+	 UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
 }
 
 
@@ -210,7 +213,7 @@ void AGrapplingHookCharacter::LoadGame()
 			UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 			if (LoadGameInstance->IsValidLowLevel()) {
 				LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
-				loadScorePlayer = LoadGameInstance->Score;
+				characterStats.score = LoadGameInstance->Score;
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
 			}
 			else {
@@ -221,7 +224,7 @@ void AGrapplingHookCharacter::LoadGame()
 					return;
 				else {
 					LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
-					loadScorePlayer = LoadGameInstance->Score;
+					characterStats.score = LoadGameInstance->Score;
 					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
 
 				}
