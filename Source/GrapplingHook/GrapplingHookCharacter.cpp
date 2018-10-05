@@ -116,6 +116,7 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, FString::Printf(TEXT("Score: %d"), scorePlayer));
 	}
 	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
+
 	 scorePlayer++;
 	/* if (scorePlayer == 50) {
 		 SaveGame();
