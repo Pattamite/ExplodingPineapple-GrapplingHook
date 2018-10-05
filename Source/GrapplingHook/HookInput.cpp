@@ -64,6 +64,7 @@ void UHookInput::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
         startInput = Location;
         currentTouchIndex = GetFingerIndexName(FingerIndex);
         isTouched = true;
+        OnStartHookTouch.Broadcast(Location);
     }
 }
 
@@ -72,6 +73,7 @@ void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
     if (GetFingerIndexName(FingerIndex) == currentTouchIndex)
     {
         currentInput = Location;
+        OnRepeatHookTouch.Broadcast(Location);
     }
 }
 
@@ -94,6 +96,8 @@ void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
         }
 
         isTouched = false;
+
+        OnStopHookTouch.Broadcast(Location);
     }
 }
 
