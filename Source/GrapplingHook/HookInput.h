@@ -37,6 +37,8 @@ public:
         FVoidDelegate OnUnHookCommand;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
         FVoidDelegate OnJumpCommand;
+	UFUNCTION(BlueprintCallable, Category = "Hook Input")
+		bool IsTouched();
 
 private:
     void BindingInputComponent();

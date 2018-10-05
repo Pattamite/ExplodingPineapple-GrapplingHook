@@ -40,6 +40,11 @@ void UHookInput::ButtonPress() {
     );
 }
 
+bool UHookInput::IsTouched()
+{
+	return isTouched;
+}
+
 void UHookInput::BindingInputComponent()
 {
     owner->InputComponent->BindTouch(IE_Pressed, this, &UHookInput::TouchStart);
