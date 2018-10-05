@@ -61,6 +61,8 @@ protected:
 
 	void LoadGame();
 
+	bool isLoaded;
+
     /** Handle touch inputs. */
     void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 

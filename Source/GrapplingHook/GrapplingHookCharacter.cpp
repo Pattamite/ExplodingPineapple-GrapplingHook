@@ -83,6 +83,7 @@ AGrapplingHookCharacter::AGrapplingHookCharacter()
 
 	//Default Value
 	characterStats.score = 1;
+	isLoaded = false;
 
 }
 
@@ -107,14 +108,24 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
     
     UpdateCharacter();	
+	
+	if (!isLoaded) {
+		LoadGame();
+		scorePlayer = 0;
+		isLoaded = true;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, FString::Printf(TEXT("Score: %d"), scorePlayer));
+	}
 	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
 	 scorePlayer++;
-	 if (scorePlayer == 50) {
+	/* if (scorePlayer == 50) {
 		 SaveGame();
-	 }
-	 
-	 if (scorePlayer >= 300) {
+	 }*/
+	 /*if (scorePlayer >= 300) {
 		 LoadGame();
+	 }*/
+	 
+	 if (scorePlayer > characterStats.score) {
+		 SaveGame();
 	 }
 
 	 UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
