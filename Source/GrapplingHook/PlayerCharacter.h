@@ -16,6 +16,8 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+	// TODO create enum class for player state
+
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* SideViewCameraComponent;
@@ -66,4 +68,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	void Walking();
+	void Jumping();
 };

@@ -65,11 +65,14 @@ APlayerCharacter::APlayerCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	// TODO initialize state
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Animation
 
+// TODO fix UpdateAnimation 
 void APlayerCharacter::UpdateAnimation()
 {
 	const FVector PlayerVelocity = GetVelocity();
@@ -121,13 +124,34 @@ void APlayerCharacter::UpdateCharacter()
 	// Update animation to match the motion
 	UpdateAnimation();
 
+	const FVector playerVelocity = GetVelocity();
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
 	if (CanJump())
+	{ 
 		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	}
+	else 
+	{
+		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+	}
 }
 
 void APlayerCharacter::CallJump()
 {
     Jump();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// TODO behavior walk, jump, shoot
+
+void APlayerCharacter::Walking()
+{
+	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+}
+
+void APlayerCharacter::Jumping()
+{
+	Jump();
 }
 
