@@ -66,9 +66,27 @@ APlayerCharacter::APlayerCharacter()
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
 
-	// TODO initialize state
-	playerState = EPlayerState::IDLE;
+	// Initialize state
+	myPlayerState = EPlayerState::IDLE;
 	CurrentState();
+
+	//hookShooter = Cast<UHookShooter>(GetComponentByClass(UHookShooter::StaticClass()));
+	/*if (hookShooter != nullptr) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hook name: %s"), *hookShooter->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not found hook shooter"));
+	}	*/
+}
+
+// Called when the game starts
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Start game"));
+	FindHookShooterComponent();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -91,7 +109,7 @@ FString APlayerCharacter::EnumToString(const TCHAR *Enum, int32 EnumValue) const
 // Print current state
 void APlayerCharacter::CurrentState()
 {
-	FString msg = TEXT("Init Player state: ") + EnumToString(TEXT("EPlayerState"), static_cast<uint8>(playerState));
+	FString msg = TEXT("Init Player state: ") + EnumToString(TEXT("EPlayerState"), static_cast<uint8>(myPlayerState));
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
 	return;
 }
@@ -104,7 +122,7 @@ void APlayerCharacter::UpdateAnimation()
 {
 	UPaperFlipbook* desiredAnimation = NULL;
 
-	switch (playerState)
+	switch (myPlayerState)
 	{
 	case EPlayerState::IDLE:
 		desiredAnimation = IdleAnimation;
@@ -170,7 +188,7 @@ void APlayerCharacter::UpdateCharacter()
 	const FVector playerVelocity = GetVelocity();
 	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	if (GetCharacterMovement()->IsMovingOnGround())
+	if (myPlayerState == EPlayerState::RUNNING)
 	{ 
 		Running();
 	}
@@ -184,11 +202,18 @@ void APlayerCharacter::UpdatePlayerState()
 {
 	if (GetCharacterMovement()->IsMovingOnGround())
 	{
-		playerState = EPlayerState::RUNNING;
+		myPlayerState = EPlayerState::RUNNING;
 	}
 	else
 	{
-		playerState = EPlayerState::NOTUSEHOOKONAIR;
+		if (hookShooter->IsOnHook())
+		{
+			myPlayerState = EPlayerState::USEHOOKONAIR;
+		}
+		else
+		{
+			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		}
 	}
 	CurrentState();
 }
@@ -196,6 +221,16 @@ void APlayerCharacter::UpdatePlayerState()
 void APlayerCharacter::CallJump()
 {
     Jump();
+}
+
+// Look for attached Hook Shooter
+void APlayerCharacter::FindHookShooterComponent()
+{
+	hookShooter = FindComponentByClass<UHookShooter>();
+	if (hookShooter != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found hook shooter component"))
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "HookShooter.h"
 #include "PlayerCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -36,6 +37,10 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	class USpringArmComponent* CameraBoom;
 
 	UTextRenderComponent* TextComponent;
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
 	virtual void Tick(float DeltaSeconds) override;
 
 
@@ -69,10 +74,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+	EPlayerState myPlayerState;
+
     UFUNCTION(BlueprintCallable, Category = "Action")
         void CallJump();
 
 	FString EnumToString(const TCHAR*, int32) const;
+	UHookShooter* hookShooter = nullptr;
+
+	void FindHookShooterComponent();
 	void CurrentState();
 
 public:
@@ -87,5 +98,5 @@ public:
 	void Jumping();
 	void StopRunning();
 
-	EPlayerState playerState;
+	//EPlayerState myPlayerState;
 };
