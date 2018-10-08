@@ -67,6 +67,33 @@ APlayerCharacter::APlayerCharacter()
 	bReplicates = true;
 
 	// TODO initialize state
+	playerState = EPlayerState::IDLE;
+	CurrentState();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+
+// Get state from enum
+FString APlayerCharacter::EnumToString(const TCHAR *Enum, int32 EnumValue) const
+{
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+	if (!EnumPtr)
+		return NSLOCTEXT("Invalid", "Invalid", "Invalid").ToString();
+
+#if WITH_EDITOR
+	return EnumPtr->GetDisplayNameText(EnumValue).ToString();
+#else
+	return EnumPtr->GetEnumName(EnumValue);
+#endif
+}
+
+// Print current state
+void APlayerCharacter::CurrentState()
+{
+	FString msg = TEXT("Init Player state: ") + EnumToString(TEXT("EPlayerState"), static_cast<uint8>(playerState));
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
+	return;
 }
 
 //////////////////////////////////////////////////////////////////////////

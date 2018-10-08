@@ -8,6 +8,15 @@
 
 class UTextRenderComponent;
 
+UENUM(BlueprintType)
+enum class EPlayerState : uint8
+{
+	IDLE UMETA(DisplayName = "Idle"),
+	RUNNING UMETA(DisplayName = "Running"),
+	USEHOOKONAIR UMETA(DisplayName = "UseHookOnAir"),
+	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir")
+};
+
 /**
  * 
  */
@@ -61,6 +70,9 @@ private:
     UFUNCTION(BlueprintCallable, Category = "Action")
         void CallJump();
 
+	FString EnumToString(const TCHAR*, int32) const;
+	void CurrentState();
+
 public:
 	APlayerCharacter();
 
@@ -71,4 +83,6 @@ public:
 
 	void Walking();
 	void Jumping();
+
+	EPlayerState playerState;
 };
