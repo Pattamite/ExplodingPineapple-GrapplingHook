@@ -99,18 +99,31 @@ void APlayerCharacter::CurrentState()
 //////////////////////////////////////////////////////////////////////////
 // Animation
 
-// TODO fix UpdateAnimation 
+// Update animation from state 
 void APlayerCharacter::UpdateAnimation()
 {
-	const FVector PlayerVelocity = GetVelocity();
-	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+	UPaperFlipbook* desiredAnimation = NULL;
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if (GetSprite()->GetFlipbook() != DesiredAnimation)
+	switch (playerState)
 	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+	case EPlayerState::IDLE:
+		desiredAnimation = IdleAnimation;
+		break;
+	case EPlayerState::RUNNING:
+		desiredAnimation = RunningAnimation;
+		break;
+	case EPlayerState::USEHOOKONAIR:
+		desiredAnimation = IdleAnimation;
+		break;
+	case EPlayerState::NOTUSEHOOKONAIR:
+		desiredAnimation = IdleAnimation;
+		break;
+	default:
+		desiredAnimation = IdleAnimation;
+		break;
 	}
+	GetSprite()->SetFlipbook(desiredAnimation);
+	return;
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -151,17 +164,33 @@ void APlayerCharacter::UpdateCharacter()
 	// Update animation to match the motion
 	UpdateAnimation();
 
+	// Update player current state
+	UpdatePlayerState();
+
 	const FVector playerVelocity = GetVelocity();
 	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	if (CanJump())
+	if (GetCharacterMovement()->IsMovingOnGround())
 	{ 
-		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+		Running();
 	}
 	else 
 	{
-		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+		StopRunning();
 	}
+}
+
+void APlayerCharacter::UpdatePlayerState()
+{
+	if (GetCharacterMovement()->IsMovingOnGround())
+	{
+		playerState = EPlayerState::RUNNING;
+	}
+	else
+	{
+		playerState = EPlayerState::NOTUSEHOOKONAIR;
+	}
+	CurrentState();
 }
 
 void APlayerCharacter::CallJump()
@@ -172,13 +201,21 @@ void APlayerCharacter::CallJump()
 //////////////////////////////////////////////////////////////////////////
 // TODO behavior walk, jump, shoot
 
-void APlayerCharacter::Walking()
+void APlayerCharacter::Running()
 {
 	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	return;
+}
+
+void APlayerCharacter::StopRunning()
+{
+	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+	return;
 }
 
 void APlayerCharacter::Jumping()
 {
 	Jump();
+	return;
 }
 

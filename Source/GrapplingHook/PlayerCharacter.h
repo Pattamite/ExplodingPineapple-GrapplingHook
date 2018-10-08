@@ -53,6 +53,8 @@ protected:
 
 	void UpdateCharacter();
 
+	void UpdatePlayerState();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -81,8 +83,9 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	void Walking();
+	void Running();
 	void Jumping();
+	void StopRunning();
 
 	EPlayerState playerState;
 };
