@@ -246,3 +246,10 @@ void APlayerCharacter::Jumping()
 	return;
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Getter
+
+UHookShooter * APlayerCharacter::GetHookShooter()
+{
+	return hookShooter;
+}
