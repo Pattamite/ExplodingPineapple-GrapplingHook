@@ -60,6 +60,8 @@ protected:
 
 	void UpdatePlayerState();
 
+	void UpdatePlayerRun();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -73,13 +75,12 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-	EPlayerState myPlayerState;
+	
 
     UFUNCTION(BlueprintCallable, Category = "Action")
-        void CallJump();
+    void CallJump();
 
+	EPlayerState myPlayerState;
 	FString EnumToString(const TCHAR*, int32) const;
 	UHookShooter* hookShooter = nullptr;
 
@@ -97,6 +98,4 @@ public:
 	void Running();
 	void Jumping();
 	void StopRunning();
-
-	//EPlayerState myPlayerState;
 };

@@ -65,28 +65,29 @@ APlayerCharacter::APlayerCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
-
-	// Initialize state
-	myPlayerState = EPlayerState::IDLE;
-	CurrentState();
-
-	//hookShooter = Cast<UHookShooter>(GetComponentByClass(UHookShooter::StaticClass()));
-	/*if (hookShooter != nullptr) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hook name: %s"), *hookShooter->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not found hook shooter"));
-	}	*/
 }
 
 // Called when the game starts
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Start game"));
+
+	myPlayerState = EPlayerState::IDLE;
+	CurrentState();
 	FindHookShooterComponent();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Look for attached component
+
+// Hook Shooter
+void APlayerCharacter::FindHookShooterComponent()
+{
+	hookShooter = FindComponentByClass<UHookShooter>();
+	if (hookShooter != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found hook shooter component"))
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -179,23 +180,9 @@ void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const F
 
 void APlayerCharacter::UpdateCharacter()
 {
-	// Update animation to match the motion
 	UpdateAnimation();
-
-	// Update player current state
 	UpdatePlayerState();
-
-	const FVector playerVelocity = GetVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	// Move right endless
-	if (myPlayerState == EPlayerState::RUNNING)
-	{ 
-		Running();
-	}
-	else 
-	{
-		StopRunning();
-	}
+	UpdatePlayerRun();
 }
 
 void APlayerCharacter::UpdatePlayerState()
@@ -218,23 +205,28 @@ void APlayerCharacter::UpdatePlayerState()
 	CurrentState();
 }
 
+void APlayerCharacter::UpdatePlayerRun()
+{
+	const FVector playerVelocity = GetVelocity();
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	// Move right endless
+	if (myPlayerState == EPlayerState::RUNNING)
+	{
+		Running();
+	}
+	else
+	{
+		StopRunning();
+	}
+}
+
 void APlayerCharacter::CallJump()
 {
     Jump();
 }
 
-// Look for attached Hook Shooter
-void APlayerCharacter::FindHookShooterComponent()
-{
-	hookShooter = FindComponentByClass<UHookShooter>();
-	if (hookShooter != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Found hook shooter component"))
-	}
-}
-
 //////////////////////////////////////////////////////////////////////////
-// TODO behavior walk, jump, shoot
+// Behavior
 
 void APlayerCharacter::Running()
 {
