@@ -15,7 +15,7 @@
 UCLASS(minimalapi)
 class AGrapplingHookGameMode : public AGameModeBase
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 public:
-    AGrapplingHookGameMode();
+	AGrapplingHookGameMode();
 };
