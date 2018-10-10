@@ -67,20 +67,82 @@ APlayerCharacter::APlayerCharacter()
 	bReplicates = true;
 }
 
+// Called when the game starts
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	myPlayerState = EPlayerState::IDLE;
+	CurrentState();
+	FindHookShooterComponent();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Look for attached component
+
+// Hook Shooter
+void APlayerCharacter::FindHookShooterComponent()
+{
+	hookShooter = FindComponentByClass<UHookShooter>();
+	if (hookShooter != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found hook shooter component"))
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Debug
+
+// Get state from enum
+FString APlayerCharacter::EnumToString(const TCHAR *Enum, int32 EnumValue) const
+{
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, Enum, true);
+	if (!EnumPtr)
+		return NSLOCTEXT("Invalid", "Invalid", "Invalid").ToString();
+
+#if WITH_EDITOR
+	return EnumPtr->GetDisplayNameText(EnumValue).ToString();
+#else
+	return EnumPtr->GetEnumName(EnumValue);
+#endif
+}
+
+// Print current state
+void APlayerCharacter::CurrentState()
+{
+	FString msg = TEXT("Init Player state: ") + EnumToString(TEXT("EPlayerState"), static_cast<uint8>(myPlayerState));
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *msg);
+	return;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Animation
 
+// Update animation from state 
 void APlayerCharacter::UpdateAnimation()
 {
-	const FVector PlayerVelocity = GetVelocity();
-	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+	UPaperFlipbook* desiredAnimation = NULL;
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if (GetSprite()->GetFlipbook() != DesiredAnimation)
+	switch (myPlayerState)
 	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+	case EPlayerState::IDLE:
+		desiredAnimation = IdleAnimation;
+		break;
+	case EPlayerState::RUNNING:
+		desiredAnimation = RunningAnimation;
+		break;
+	case EPlayerState::USEHOOKONAIR:
+		desiredAnimation = IdleAnimation;
+		break;
+	case EPlayerState::NOTUSEHOOKONAIR:
+		desiredAnimation = IdleAnimation;
+		break;
+	default:
+		desiredAnimation = IdleAnimation;
+		break;
 	}
+	GetSprite()->SetFlipbook(desiredAnimation);
+	return;
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)
@@ -118,12 +180,44 @@ void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const F
 
 void APlayerCharacter::UpdateCharacter()
 {
-	// Update animation to match the motion
 	UpdateAnimation();
+	UpdatePlayerState();
+	UpdatePlayerRun();
+}
 
+void APlayerCharacter::UpdatePlayerState()
+{
+	if (GetCharacterMovement()->IsMovingOnGround())
+	{
+		myPlayerState = EPlayerState::RUNNING;
+	}
+	else
+	{
+		if (hookShooter->IsOnHook())
+		{
+			myPlayerState = EPlayerState::USEHOOKONAIR;
+		}
+		else
+		{
+			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		}
+	}
+	CurrentState();
+}
+
+void APlayerCharacter::UpdatePlayerRun()
+{
+	const FVector playerVelocity = GetVelocity();
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	if (CanJump())
-		AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	if (myPlayerState == EPlayerState::RUNNING)
+	{
+		Running();
+	}
+	else
+	{
+		StopRunning();
+	}
 }
 
 void APlayerCharacter::CallJump()
@@ -131,3 +225,31 @@ void APlayerCharacter::CallJump()
     Jump();
 }
 
+//////////////////////////////////////////////////////////////////////////
+// Behavior
+
+void APlayerCharacter::Running()
+{
+	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 1);
+	return;
+}
+
+void APlayerCharacter::StopRunning()
+{
+	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+	return;
+}
+
+void APlayerCharacter::Jumping()
+{
+	Jump();
+	return;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Getter
+
+UHookShooter * APlayerCharacter::GetHookShooter()
+{
+	return hookShooter;
+}

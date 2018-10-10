@@ -4,9 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "HookShooter.h"
 #include "PlayerCharacter.generated.h"
 
 class UTextRenderComponent;
+
+UENUM(BlueprintType)
+enum class EPlayerState : uint8
+{
+	IDLE UMETA(DisplayName = "Idle"),
+	RUNNING UMETA(DisplayName = "Running"),
+	USEHOOKONAIR UMETA(DisplayName = "UseHookOnAir"),
+	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir")
+};
 
 /**
  * 
@@ -15,6 +25,8 @@ UCLASS(config=Game)
 class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
+
+	// TODO create enum class for player state
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -25,6 +37,10 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	class USpringArmComponent* CameraBoom;
 
 	UTextRenderComponent* TextComponent;
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
 	virtual void Tick(float DeltaSeconds) override;
 
 
@@ -42,6 +58,10 @@ protected:
 
 	void UpdateCharacter();
 
+	void UpdatePlayerState();
+
+	void UpdatePlayerRun();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -55,9 +75,17 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
+	
 
     UFUNCTION(BlueprintCallable, Category = "Action")
-        void CallJump();
+    void CallJump();
+
+	EPlayerState myPlayerState;
+	FString EnumToString(const TCHAR*, int32) const;
+	UHookShooter* hookShooter = nullptr;
+
+	void FindHookShooterComponent();
+	void CurrentState();
 
 public:
 	APlayerCharacter();
@@ -66,4 +94,11 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	UHookShooter* GetHookShooter();
+
+	void Running();
+	void Jumping();
+	void StopRunning();
 };
