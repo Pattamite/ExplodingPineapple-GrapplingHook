@@ -9,8 +9,14 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "MySaveGame.h"
+#include "GrapplingHook.h"
+#include "EngineUtils.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
+
+int scorePlayer = 1;
 
 //////////////////////////////////////////////////////////////////////////
 // AGrapplingHookCharacter
@@ -74,6 +80,11 @@ AGrapplingHookCharacter::AGrapplingHookCharacter()
     // Enable replication on the Sprite component so animations show up when networked
     GetSprite()->SetIsReplicated(true);
     bReplicates = true;
+
+	//Default Value
+	characterStats.score = 1;
+	isLoaded = false;
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,6 +108,28 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
     
     UpdateCharacter();	
+	
+	if (!isLoaded) {
+		LoadGame();
+		scorePlayer = 0;
+		isLoaded = true;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, FString::Printf(TEXT("Score: %d"), scorePlayer));
+	}
+	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
+
+	 scorePlayer++;
+	/* if (scorePlayer == 50) {
+		 SaveGame();
+	 }*/
+	 /*if (scorePlayer >= 300) {
+		 LoadGame();
+	 }*/
+	 
+	 if (scorePlayer > characterStats.score) {
+		 SaveGame();
+	 }
+
+	 UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
 }
 
 
@@ -154,4 +187,67 @@ void AGrapplingHookCharacter::UpdateCharacter()
             Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
         }
     }
+}
+
+void AGrapplingHookCharacter::SaveGame() 
+{
+	class UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	
+	if (SaveGameInstance->IsValidLowLevel()) {
+		SaveGameInstance->Score = scorePlayer;
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("SAVED")));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Score: %d"), SaveGameInstance->Score));
+	}
+	else {
+		UMySaveGame* SaveGameInstance_2 = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+
+		if (!SaveGameInstance_2)
+			return;
+		else {
+			SaveGameInstance->Score = scorePlayer;
+			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("save2")));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("score2: %d"), SaveGameInstance->Score));
+		}
+	}
+	
+}
+
+void AGrapplingHookCharacter::LoadGame()
+{
+
+	if (this->IsValidLowLevel()) {
+		
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
+		const FString SaveSlotName = FString(TEXT("PlayerSaveSlot"));
+		if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0)) {
+			UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+			if (LoadGameInstance->IsValidLowLevel()) {
+				LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
+				characterStats.score = LoadGameInstance->Score;
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
+			}
+			else {
+				
+				class UMySaveGame* LoadGameInstance_2 = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+
+				if (!LoadGameInstance_2)
+					return;
+				else {
+					LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
+					characterStats.score = LoadGameInstance->Score;
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
+
+				}
+
+			}
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("No save game found")));
+		}
+		
+	}
+	
+	
 }
