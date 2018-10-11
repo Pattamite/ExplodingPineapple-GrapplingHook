@@ -82,7 +82,12 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float bounceRatio = 150.0f;
 	
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	float bounceForce = 0.0f;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();

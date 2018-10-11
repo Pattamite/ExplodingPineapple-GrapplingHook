@@ -83,7 +83,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	myPlayerState = EPlayerState::IDLE;
-	CurrentState();
+	//CurrentState();
 	FindHookShooterComponent();
 }
 
@@ -218,7 +218,7 @@ void APlayerCharacter::UpdatePlayerState()
 void APlayerCharacter::UpdatePlayerRun()
 {
 	const FVector playerVelocity = GetVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
 	if (myPlayerState == EPlayerState::RUNNING)
 	{
@@ -228,6 +228,7 @@ void APlayerCharacter::UpdatePlayerRun()
 	{
 		StopRunning();
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 }
 
 void APlayerCharacter::CallJump()
@@ -271,6 +272,15 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
+		if (myPlayerState == EPlayerState::USEHOOKONAIR)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+			const FVector playerVelocity = GetVelocity();
+			bounceForce = -(playerVelocity.X * bounceRatio);
+			GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+			UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+		}
 	}
 }
 
