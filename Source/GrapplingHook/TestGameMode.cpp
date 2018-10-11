@@ -8,6 +8,8 @@ ATestGameMode::ATestGameMode()
 {
 	// Set default pawn class to our character
 	DefaultPawnClass = APlayerCharacter::StaticClass();
+    PrimaryActorTick.bStartWithTickEnabled = true;
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATestGameMode::BeginPlay()
@@ -21,6 +23,7 @@ void ATestGameMode::BeginPlay()
     {
         UE_LOG(LogTemp, Error, TEXT("TestGameMode : Cannot get player pawn"));
     }
+    SetHighScore();
 
     Super::BeginPlay();
 
@@ -28,8 +31,9 @@ void ATestGameMode::BeginPlay()
 
 void ATestGameMode::Tick(float DeltaSeconds)
 {
-
+    CheckHighScore();
     Super::Tick(DeltaSeconds);
+    
 }
 
 float ATestGameMode::GetPlayerDistance()
@@ -40,7 +44,45 @@ float ATestGameMode::GetPlayerDistance()
     }
     else
     {
+        UE_LOG(LogTemp, Error, TEXT("TestGameMode : Cannot get player pawn"));
         return -99999.0f;
+    }
+}
+
+float ATestGameMode::GetPlayerScore()
+{
+    return (GetPlayerDistance() * scorePerDistance) + currentBonusScore;
+}
+
+void ATestGameMode::AddPlayerScore(float value)
+{
+    currentBonusScore += value;
+}
+
+void ATestGameMode::SetHighScore()
+{
+    //TODO Get real high score
+    currentHighScore = 100.0f; // for test purpose
+    isPassHighScore = false;
+    isPassHighScoreFirstTime = false;
+}
+
+void ATestGameMode::CheckHighScore()
+{
+    float currentScore = GetPlayerScore();
+
+    if (!isPassHighScore && currentScore > currentHighScore)
+    {
+        OnPassHighScore.Broadcast(currentScore);
+        isPassHighScore = true;
+        if (!isPassHighScoreFirstTime) 
+        {
+            OnPassHighScoreFirstTime.Broadcast(currentScore);
+            isPassHighScoreFirstTime = true;
+        }
+    }
+    else if (isPassHighScore && currentScore <= currentHighScore) {
+        isPassHighScore = false;
     }
 }
 
