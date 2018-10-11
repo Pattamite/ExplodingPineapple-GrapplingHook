@@ -3,7 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/GameModeBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerCharacter.h"
+#include "Engine/Engine.h"
 #include "TestGameMode.generated.h"
 
 /**
@@ -16,5 +20,14 @@ class GRAPPLINGHOOK_API ATestGameMode : public AGameModeBase
 	
 public:
 	ATestGameMode();
-	
+    virtual void Tick(float DeltaSeconds) override;
+    virtual void BeginPlay() override;
+
+    UFUNCTION(BlueprintCallable, Category = "Score")
+        float GetPlayerDistance();
+
+private:
+    APawn* player = nullptr;
+    float playerStartPosition = 0.0f;
+
 };
