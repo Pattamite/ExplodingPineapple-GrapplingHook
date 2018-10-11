@@ -11,7 +11,8 @@
 #include "Engine/Engine.h"
 #include "TestGameMode.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatDelegate, float, value);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatGameModeDelegate, float, value);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVoidGameModeDelegate);
 
 UCLASS()
 class GRAPPLINGHOOK_API ATestGameMode : public AGameModeBase
@@ -30,13 +31,17 @@ public:
         void AddPlayerScore(float value);
 
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
-        FFloatDelegate OnPassHighScore;
+        FFloatGameModeDelegate OnPassHighScore;
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
-        FFloatDelegate OnPassHighScoreFirstTime;
+        FFloatGameModeDelegate OnPassHighScoreFirstTime;
+
+    UPROPERTY(BlueprintAssignable, Category = "Game Event")
+        FVoidGameModeDelegate OnGameOver;
 
 private:
     void SetHighScore();
     void CheckHighScore();
+    void GameOver();
     
 
     APawn* player = nullptr;

@@ -86,3 +86,8 @@ void ATestGameMode::CheckHighScore()
     }
 }
 
+void ATestGameMode::GameOver()
+{
+    //OnGameOver.Broadcast();
+}
+
