@@ -12,6 +12,18 @@
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FData {
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+		int scorePlayer;
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scored")
+		int savedScorePlayer;
+		
+};
+
 UCLASS(BlueprintType, Blueprintable)
 class GRAPPLINGHOOK_API USaveScoreWidget : public UUserWidget
 {
@@ -30,4 +42,10 @@ public:
 	
 	UPROPERTY()
 	class AGrapplingHookCharacter* characterInWorld;
+
+	void LoadSaveGame();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	FData dataStats;
+
 };

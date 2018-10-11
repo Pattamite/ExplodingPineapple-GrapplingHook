@@ -20,12 +20,15 @@ public:
 public:
 
 	UPROPERTY()
-	int Score;
-
-	UPROPERTY()
 		FString SaveSlotName;
 
 	UPROPERTY()
 		uint32 UserIndex;
+
+	UPROPERTY()
+		int score;
+
+	UPROPERTY()
+		int savedScore;
 		
 };
