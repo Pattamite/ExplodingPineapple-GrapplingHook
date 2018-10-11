@@ -17,13 +17,13 @@ class UTextRenderComponent;
  * The Sprite component (inherited from APaperCharacter) handles the visuals
  */
 
-USTRUCT(BlueprintType)
+/*USTRUCT(BlueprintType)
 struct FCharacterData {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int score;
-};
+};*/
 
 UCLASS(config=Game)
 class AGrapplingHookCharacter : public APaperCharacter
@@ -61,7 +61,7 @@ protected:
 
 	void LoadGame();
 
-	bool isLoaded;
+	bool gameStart;
 
     /** Handle touch inputs. */
     void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -81,7 +81,7 @@ public:
     /** Returns CameraBoom subobject **/
     FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	FCharacterData characterStats;
-
+	*/
 };
