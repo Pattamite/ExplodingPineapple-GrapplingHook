@@ -30,19 +30,27 @@ void AHighScoreSystem::Tick(float DeltaTime)
 
 float AHighScoreSystem::LoadHighScore()
 {
-    float highScore = 0;
-    UMySaveGame* LoadGameInstance = LoadHighScoreSave();
+    return LoadLeaderboard()[0];
+}
 
+TArray<float> AHighScoreSystem::LoadLeaderboard()
+{
+    TArray<float> leaderboard;
+    leaderboard.Init(0, leaderboardSize);
+
+    UMySaveGame* LoadGameInstance = LoadHighScoreSave();
 
     if (LoadGameInstance->IsValidLowLevel())
     {
-        for (int i = 0; i < leaderboardSize; i++)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%d : %f"), i + 1, LoadGameInstance->highScore[i]));
-        }
-        highScore = LoadGameInstance->highScore[0];
+        leaderboard = LoadGameInstance->highScore;
     }
-    return highScore;
+
+    for (int i = 0; i < leaderboardSize; i++)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%d : %f"), i + 1, leaderboard[i]));
+    }
+
+    return leaderboard;
 }
 
 float AHighScoreSystem::LoadLastScore()
