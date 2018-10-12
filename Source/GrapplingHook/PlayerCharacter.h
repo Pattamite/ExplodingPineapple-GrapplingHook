@@ -89,6 +89,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
 	float bounceForce = 0.0f;
 
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float minBounceForce = 100000.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float maxBounceForce = 200000.0f;
+
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();
 
@@ -98,6 +104,7 @@ private:
 
 	void FindHookShooterComponent();
 	void CurrentState();
+	void AdjustBouncing();
 
 public:
 	APlayerCharacter();

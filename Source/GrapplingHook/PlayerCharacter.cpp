@@ -212,7 +212,7 @@ void APlayerCharacter::UpdatePlayerState()
 			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
 		}
 	}
-	CurrentState();
+	//CurrentState();
 }
 
 void APlayerCharacter::UpdatePlayerRun()
@@ -257,6 +257,21 @@ void APlayerCharacter::Jumping()
 	return;
 }
 
+void APlayerCharacter::AdjustBouncing()
+{
+	const FVector playerVelocity = GetVelocity();
+	bounceForce = -(playerVelocity.X * bounceRatio);
+	if (FMath::Abs(bounceForce) < minBounceForce)
+	{
+		bounceForce = bounceForce > 0.0f ? 0.0f : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
+	}
+	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
+
+	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Getter
 
@@ -275,11 +290,7 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 		if (myPlayerState == EPlayerState::USEHOOKONAIR)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
-			const FVector playerVelocity = GetVelocity();
-			bounceForce = -(playerVelocity.X * bounceRatio);
-			GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
-			UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-			UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+			AdjustBouncing();
 		}
 	}
 }
