@@ -25,10 +25,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+    UFUNCTION(BlueprintCallable, Category = "Highscore System")
+        static float LoadLastScore();
     UFUNCTION(BlueprintCallable, Category = "Highscore System")
         static float LoadHighScore();
     UFUNCTION(BlueprintCallable, Category = "Highscore System")
         static void SaveScore(float score);
+    static UMySaveGame* LoadHighScoreSave();
 	
 };

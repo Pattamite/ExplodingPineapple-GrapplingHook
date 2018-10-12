@@ -62,7 +62,7 @@ void ATestGameMode::AddPlayerScore(float value)
 void ATestGameMode::SetHighScore()
 {
     //TODO Get real high score
-    currentHighScore = 100.0f; // for test purpose
+    currentHighScore = AHighScoreSystem::LoadHighScore();
     isPassHighScore = false;
     isPassHighScoreFirstTime = false;
 }

@@ -14,17 +14,6 @@
  * 
  */
 
-USTRUCT(BlueprintType)
-struct FData {
-	GENERATED_USTRUCT_BODY()
-
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
-		int scorePlayer;
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scored")
-		int savedScorePlayer;
-		
-};
-
 UCLASS(BlueprintType, Blueprintable)
 class GRAPPLINGHOOK_API USaveScoreWidget : public UUserWidget
 {
@@ -35,18 +24,11 @@ private:
 
 public:
 	virtual void NativeConstruct() override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+        float lastScore;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+        float highScore;
 
 public:
-	
-	UFUNCTION(BlueprintPure, Category = "Text")
-	FText GetscoreText() const;
-	
-	UPROPERTY()
-	class AGrapplingHookCharacter* characterInWorld;
-
 	void LoadSaveGame();
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
-	FData dataStats;
-
 };
