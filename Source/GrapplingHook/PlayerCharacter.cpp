@@ -85,6 +85,7 @@ void APlayerCharacter::BeginPlay()
 	myPlayerState = EPlayerState::IDLE;
 	//CurrentState();
 	FindHookShooterComponent();
+	hookShooter->SetHook(FVector(0.f, 0.f, 0.f));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,6 +207,8 @@ void APlayerCharacter::UpdatePlayerState()
 		if (hookShooter->IsOnHook())
 		{
 			myPlayerState = EPlayerState::USEHOOKONAIR;
+			/*if (GetCharacterMovement()->IsMovingOnGround())
+				OnHitGround();*/
 		}
 		else
 		{
@@ -221,6 +224,7 @@ void APlayerCharacter::UpdatePlayerRun()
 	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
 	if (myPlayerState == EPlayerState::RUNNING)
+	//if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}

@@ -37,10 +37,9 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	/** create trigger capsule */
+	/** Create trigger capsule */
 	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
 	class UCapsuleComponent* TriggerCapsule;
-
 	/**/
 
 	UTextRenderComponent* TextComponent;
@@ -98,7 +97,6 @@ private:
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();
 
-	EPlayerState myPlayerState;
 	FString EnumToString(const TCHAR*, int32) const;
 	UHookShooter* hookShooter = nullptr;
 
@@ -122,11 +120,18 @@ public:
 	
 	// declare overlap begin function
 	UFUNCTION()
-		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	// declare overlap end function
 	UFUNCTION()
-		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/** Create player state variable */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+	EPlayerState myPlayerState;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
+	void OnHitGround();
 
 	void Running();
 	void Jumping();
