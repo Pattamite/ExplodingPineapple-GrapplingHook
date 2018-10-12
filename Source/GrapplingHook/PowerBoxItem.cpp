@@ -9,9 +9,9 @@ APowerBoxItem::APowerBoxItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	itemsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ItemRoot2"));
+	itemsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("PowerItemRoot"));
 	RootComponent = itemsRoot;
-	itemsPickUp = CreateDefaultSubobject<UBoxComponent>(TEXT("ItemPickUp2"));
+	itemsPickUp = CreateDefaultSubobject<UBoxComponent>(TEXT("PowerItemPickUp"));
 	itemsPickUp->bGenerateOverlapEvents = true;
 	itemsPickUp->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	itemsPickUp->OnComponentBeginOverlap.AddDynamic(this, &APowerBoxItem::OnOverlapBegin);

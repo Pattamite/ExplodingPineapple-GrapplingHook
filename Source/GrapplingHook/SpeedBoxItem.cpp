@@ -9,9 +9,9 @@ ASpeedBoxItem::ASpeedBoxItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	itemsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ItemRoot"));
+	itemsRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SpeedRootItem"));
 	RootComponent = itemsRoot;
-	itemsPickUp = CreateDefaultSubobject<UBoxComponent>(TEXT("ItemPickUp"));
+	itemsPickUp = CreateDefaultSubobject<UBoxComponent>(TEXT("SpeedItemPickUp"));
 	itemsPickUp->bGenerateOverlapEvents = true;
 	itemsPickUp->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	itemsPickUp->OnComponentBeginOverlap.AddDynamic(this, &ASpeedBoxItem::OnOverlapBegin);
