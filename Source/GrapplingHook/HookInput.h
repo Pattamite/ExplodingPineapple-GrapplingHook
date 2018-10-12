@@ -33,6 +33,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
         FVectorDelegate OnHookCommand;
+	UPROPERTY(BlueprintAssignable, Category = "Hook Input")
+		FVectorDelegate OnAimHookCommand;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
         FVoidDelegate OnUnHookCommand;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
