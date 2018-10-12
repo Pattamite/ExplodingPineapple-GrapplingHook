@@ -32,5 +32,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Highscore System")
         static void SaveScore(float score);
     static UMySaveGame* LoadHighScoreSave();
-	
+
+private:
+    static const FString SaveSlotName;
+    static const uint32 UserIndex;
+
 };

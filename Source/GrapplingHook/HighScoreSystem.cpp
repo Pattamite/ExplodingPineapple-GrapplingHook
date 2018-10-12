@@ -2,6 +2,8 @@
 
 #include "HighScoreSystem.h"
 
+const FString AHighScoreSystem::SaveSlotName = "PlayerScore";
+const uint32 AHighScoreSystem::UserIndex = 0;
 
 // Sets default values
 AHighScoreSystem::AHighScoreSystem()
@@ -69,17 +71,14 @@ void AHighScoreSystem::SaveScore(float score)
         SaveGameInstance->highScore = score;
     }
 
-    UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
+    UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, UserIndex);
 }
 
 UMySaveGame* AHighScoreSystem::LoadHighScoreSave()
 {
-    UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-
-    if (LoadGameInstance->IsValidLowLevel() &&
-        UGameplayStatics::DoesSaveGameExist(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex))
+    if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, UserIndex))
     {
-        LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
+        UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
         if (LoadGameInstance->IsValidLowLevel())
         {
             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HighScore Found")));

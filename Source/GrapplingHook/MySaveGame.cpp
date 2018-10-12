@@ -6,12 +6,8 @@
 
 UMySaveGame::UMySaveGame()
 {
-	
-	SaveSlotName = FString(TEXT("PlayerScore"));
-	UserIndex = 0;
     highScore = 0;
     lastScore = 0;
-
 }
 
 
