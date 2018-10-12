@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PBootBox.h"
+#include "PSpeedBox.h"
 
-PBootBox::PBootBox()
+PSpeedBox::PSpeedBox()
 {
 	pickupBox = new PSpeedItem();
 }
 
-PBootBox::~PBootBox()
+PSpeedBox::~PSpeedBox()
 {
 }
 
-void PBootBox::displayEffect()
+void PSpeedBox::displayEffect()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Display: Speed Up! In PBootBox"));
 }

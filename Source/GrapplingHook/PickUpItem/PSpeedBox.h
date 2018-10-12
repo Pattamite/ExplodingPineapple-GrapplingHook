@@ -9,10 +9,10 @@
 /**
  * 
  */
-class GRAPPLINGHOOK_API PBootBox : public IPickUpBox
+class GRAPPLINGHOOK_API PSpeedBox : public IPickUpBox
 {
 public:
-	PBootBox();
-	~PBootBox();
+	PSpeedBox();
+	~PSpeedBox();
 	void displayEffect();
 };
