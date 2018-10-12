@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShapeComponent.h"
+#include "PickUpItem/PickUpBox.h"
+#include "PickUpItem/PBootBox.h"
 #include "PickUpItems.generated.h"
 
 
@@ -38,7 +40,8 @@ public:
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent *OverlappedComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult);
 	
-	
+	IPickUpBox *speedBox;
+
 	/*UFUNCTION()
 		void PickUp();
 		*/

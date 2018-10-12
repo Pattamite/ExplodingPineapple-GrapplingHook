@@ -20,6 +20,10 @@ APickUpItems::APickUpItems()
 	itemsPickUp->AttachToComponent(this->RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	UE_LOG(LogTemp, Warning, TEXT("BoX"));
 
+	speedBox = new PBootBox();
+	speedBox->getEffectBox();
+	speedBox->displayEffect();
+
 }
 
 void APickUpItems::OnOverlapBegin(UPrimitiveComponent *OverlappedComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
@@ -28,8 +32,10 @@ void APickUpItems::OnOverlapBegin(UPrimitiveComponent *OverlappedComp, AActor *O
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) {
 		Destroy();
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("PowerUp!"));
+		speedBox->getEffectBox();
+		speedBox->displayEffect();
+		
 	}
-	
 	
 }
 
