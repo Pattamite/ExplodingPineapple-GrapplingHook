@@ -90,3 +90,11 @@ UMySaveGame* AHighScoreSystem::LoadHighScoreSave()
     return nullptr;
 }
 
+void AHighScoreSystem::ResetHighScore()
+{
+    if(UGameplayStatics::DoesSaveGameExist(SaveSlotName, UserIndex))
+    {
+        UGameplayStatics::DeleteGameInSlot(SaveSlotName, UserIndex);
+    }
+}
+

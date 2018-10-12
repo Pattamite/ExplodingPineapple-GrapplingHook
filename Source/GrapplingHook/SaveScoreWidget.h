@@ -30,5 +30,6 @@ public:
         float highScore;
 
 public:
+    UFUNCTION(BlueprintCallable, Category = "Widget")
 	void LoadSaveGame();
 };

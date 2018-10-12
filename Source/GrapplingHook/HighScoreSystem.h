@@ -31,6 +31,8 @@ public:
         static float LoadHighScore();
     UFUNCTION(BlueprintCallable, Category = "Highscore System")
         static void SaveScore(float score);
+    UFUNCTION(BlueprintCallable, Category = "Highscore System")
+        static void ResetHighScore();
     static UMySaveGame* LoadHighScoreSave();
 
 private:
