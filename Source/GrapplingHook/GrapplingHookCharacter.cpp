@@ -115,7 +115,7 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 		isLoaded = true;
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, FString::Printf(TEXT("Score: %d"), scorePlayer));
 	}
-	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
+	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
 
 	 scorePlayer++;
 	/* if (scorePlayer == 50) {
@@ -129,7 +129,7 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 		 SaveGame();
 	 }
 
-	 UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
+	// UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
 }
 
 
