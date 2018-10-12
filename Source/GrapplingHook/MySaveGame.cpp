@@ -6,7 +6,7 @@
 
 UMySaveGame::UMySaveGame()
 {
-    highScore = 0;
+    highScore.Init(0, 1);
     lastScore = 0;
 }
 

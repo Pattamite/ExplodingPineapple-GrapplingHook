@@ -36,7 +36,10 @@ public:
     static UMySaveGame* LoadHighScoreSave();
 
 private:
+    static void AddScoreToLeaderBoard(UMySaveGame* SaveGameInstance, float score);
+
     static const FString SaveSlotName;
     static const uint32 UserIndex;
+    static const int leaderboardSize;
 
 };

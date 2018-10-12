@@ -4,6 +4,7 @@
 
 const FString AHighScoreSystem::SaveSlotName = "PlayerScore";
 const uint32 AHighScoreSystem::UserIndex = 0;
+const int AHighScoreSystem::leaderboardSize = 5;
 
 // Sets default values
 AHighScoreSystem::AHighScoreSystem()
@@ -32,9 +33,14 @@ float AHighScoreSystem::LoadHighScore()
     float highScore = 0;
     UMySaveGame* LoadGameInstance = LoadHighScoreSave();
 
+
     if (LoadGameInstance->IsValidLowLevel())
     {
-        highScore = LoadGameInstance->highScore;
+        for (int i = 0; i < leaderboardSize; i++)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%d : %f"), i + 1, LoadGameInstance->highScore[i]));
+        }
+        highScore = LoadGameInstance->highScore[0];
     }
     return highScore;
 }
@@ -55,21 +61,12 @@ void AHighScoreSystem::SaveScore(float score)
 {
     UMySaveGame* SaveGameInstance = LoadHighScoreSave();
 
-    if (SaveGameInstance->IsValidLowLevel())
+    if (!(SaveGameInstance->IsValidLowLevel()))
     {
-        SaveGameInstance->lastScore = score;
-        if (score > SaveGameInstance->highScore)
-        {
-            //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("New High Score")));
-            SaveGameInstance->highScore = score;
-        }
-        
-    }
-    else {
         SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-        SaveGameInstance->lastScore = score;
-        SaveGameInstance->highScore = score;
     }
+
+    AddScoreToLeaderBoard(SaveGameInstance, score);
 
     UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, UserIndex);
 }
@@ -96,5 +93,20 @@ void AHighScoreSystem::ResetHighScore()
     {
         UGameplayStatics::DeleteGameInSlot(SaveSlotName, UserIndex);
     }
+}
+
+void AHighScoreSystem::AddScoreToLeaderBoard(UMySaveGame* SaveGameInstance, float score) {
+    SaveGameInstance->lastScore = score;
+    SaveGameInstance->highScore.Add(score);
+    for(int i = 0 ; i < leaderboardSize ; i++)
+    {
+        SaveGameInstance->highScore.Add(0.0f);
+    }
+
+    SaveGameInstance->highScore.Sort([](const int& A, const int& B) {
+        return A > B;
+    });
+
+    SaveGameInstance->highScore.SetNum(leaderboardSize);
 }
 

@@ -19,7 +19,7 @@ public:
 
 public:
 	UPROPERTY()
-		float highScore;
+        TArray<float> highScore;
     UPROPERTY()
         float lastScore;
 		
