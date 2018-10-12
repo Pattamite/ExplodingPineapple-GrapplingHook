@@ -7,6 +7,7 @@
 #include "WidgetTree.h"
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
+#include "HighScoreSystem.h"
 #include "SaveScoreWidget.generated.h"
 
 /**

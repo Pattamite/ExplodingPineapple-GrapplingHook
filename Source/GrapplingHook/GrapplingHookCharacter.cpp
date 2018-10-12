@@ -122,7 +122,7 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
 
 	 scorePlayer++;
-	 SaveGame();
+	 //SaveGame();
 	 /*if (scorePlayer == 50) {
 		 SaveGame();
 	 }
@@ -194,7 +194,7 @@ void AGrapplingHookCharacter::UpdateCharacter()
     }
 }
 
-void AGrapplingHookCharacter::SaveGame() 
+/*void AGrapplingHookCharacter::SaveGame() 
 {
 	class UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex));
@@ -218,4 +218,4 @@ void AGrapplingHookCharacter::SaveGame()
 		}
 	}
 	
-}
+}*/

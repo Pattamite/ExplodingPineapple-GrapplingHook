@@ -88,6 +88,7 @@ void ATestGameMode::CheckHighScore()
 
 void ATestGameMode::GameOver()
 {
-    //OnGameOver.Broadcast();
+    AHighScoreSystem::SaveScore(GetPlayerScore());
+    OnGameOver.Broadcast();
 }
 

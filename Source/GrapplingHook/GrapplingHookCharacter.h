@@ -57,9 +57,9 @@ protected:
 
     void UpdateCharacter();
 
-	void SaveGame();
+	//void SaveGame();
 
-	void LoadGame();
+	//void LoadGame();
 
 	bool gameStart;
 

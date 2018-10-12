@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "Engine/Engine.h"
+#include "HighScoreSystem.h"
 #include "TestGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatGameModeDelegate, float, value);
@@ -41,7 +42,8 @@ public:
 private:
     void SetHighScore();
     void CheckHighScore();
-    void GameOver();
+    UFUNCTION(BlueprintCallable, Category = "Debug")
+        void GameOver();
     
 
     APawn* player = nullptr;

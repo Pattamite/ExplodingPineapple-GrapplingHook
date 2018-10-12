@@ -26,9 +26,9 @@ public:
 		uint32 UserIndex;
 
 	UPROPERTY()
-		int score;
+		int highScore;
 
-	UPROPERTY()
-		int savedScore;
+    UPROPERTY()
+        int lastScore;
 		
 };

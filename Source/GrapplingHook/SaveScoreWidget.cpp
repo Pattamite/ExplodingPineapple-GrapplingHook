@@ -35,12 +35,12 @@ FText USaveScoreWidget::GetscoreText() const {
 
 void USaveScoreWidget::LoadSaveGame()
 {
-	
-
 	if (this->IsValidLowLevel()) {
-
+        float highScore = AHighScoreSystem::LoadHighScore();
+        dataStats.scorePlayer = highScore;
+        dataStats.savedScorePlayer = highScore;
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("LOADsave")));
-		const FString SaveSlotName = FString(TEXT("PlayerScore"));
+		/*const FString SaveSlotName = FString(TEXT("PlayerScore"));
 		if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0)) {
 			UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 			
@@ -85,7 +85,7 @@ void USaveScoreWidget::LoadSaveGame()
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("No save game found")));
-		}
+		}*/
 
 	}
 
