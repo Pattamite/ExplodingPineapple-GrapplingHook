@@ -94,6 +94,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float maxBounceForce = 200000.0f;
 
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	bool isOnGround = false;
+
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();
 

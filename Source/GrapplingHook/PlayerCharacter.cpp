@@ -198,22 +198,59 @@ void APlayerCharacter::UpdateCharacter()
 
 void APlayerCharacter::UpdatePlayerState()
 {
-	if (GetCharacterMovement()->IsMovingOnGround())
+	isOnGround = GetCharacterMovement()->IsMovingOnGround();
+
+	switch (myPlayerState)
 	{
-		myPlayerState = EPlayerState::RUNNING;
-	}
-	else
-	{
-		if (hookShooter->IsOnHook())
+	case EPlayerState::IDLE:
+		if (isOnGround)
 		{
-			myPlayerState = EPlayerState::USEHOOKONAIR;
-			/*if (GetCharacterMovement()->IsMovingOnGround())
-				OnHitGround();*/
+			myPlayerState = EPlayerState::RUNNING;
 		}
-		else
+		else 
 		{
 			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
 		}
+		break;
+	case EPlayerState::RUNNING:
+		if (!isOnGround)
+		{
+			if (!hookShooter->IsOnHook()) 
+			{
+				myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+			}
+			else
+			{
+				myPlayerState = EPlayerState::USEHOOKONAIR;
+			}
+		}
+		break;
+	case EPlayerState::USEHOOKONAIR:
+		if (isOnGround)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
+			OnHitGround();
+			myPlayerState = EPlayerState::RUNNING;
+		}
+
+		if (!hookShooter->IsOnHook())
+		{
+			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		}
+		break;
+	case EPlayerState::NOTUSEHOOKONAIR:
+		if (isOnGround)
+		{
+			myPlayerState = EPlayerState::RUNNING;
+		}
+		if (hookShooter->IsOnHook())
+		{
+			myPlayerState = EPlayerState::USEHOOKONAIR;
+		}
+		break;
+	default:
+		
+		break;
 	}
 	//CurrentState();
 }
@@ -223,8 +260,8 @@ void APlayerCharacter::UpdatePlayerRun()
 	const FVector playerVelocity = GetVelocity();
 	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	if (myPlayerState == EPlayerState::RUNNING)
-	//if (GetCharacterMovement()->IsMovingOnGround())
+	//if (myPlayerState == EPlayerState::RUNNING)
+	if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}
