@@ -68,6 +68,12 @@ protected:
 
 	void UpdatePlayerRun();
 
+	/** State behavior */
+	void IdleState();
+	void RunningState();
+	void HookOnAirState();
+	void NoHookOnAirState();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -96,6 +102,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
 	bool isOnGround = false;
+
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	bool isOnHook = false;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();

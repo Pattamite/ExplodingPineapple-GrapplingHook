@@ -199,54 +199,21 @@ void APlayerCharacter::UpdateCharacter()
 void APlayerCharacter::UpdatePlayerState()
 {
 	isOnGround = GetCharacterMovement()->IsMovingOnGround();
+	isOnHook = hookShooter->IsOnHook();
 
 	switch (myPlayerState)
 	{
 	case EPlayerState::IDLE:
-		if (isOnGround)
-		{
-			myPlayerState = EPlayerState::RUNNING;
-		}
-		else 
-		{
-			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
-		}
+		IdleState();
 		break;
 	case EPlayerState::RUNNING:
-		if (!isOnGround)
-		{
-			if (!hookShooter->IsOnHook()) 
-			{
-				myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
-			}
-			else
-			{
-				myPlayerState = EPlayerState::USEHOOKONAIR;
-			}
-		}
+		RunningState();
 		break;
 	case EPlayerState::USEHOOKONAIR:
-		if (isOnGround)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
-			OnHitGround();
-			myPlayerState = EPlayerState::RUNNING;
-		}
-
-		if (!hookShooter->IsOnHook())
-		{
-			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
-		}
+		HookOnAirState();
 		break;
 	case EPlayerState::NOTUSEHOOKONAIR:
-		if (isOnGround)
-		{
-			myPlayerState = EPlayerState::RUNNING;
-		}
-		if (hookShooter->IsOnHook())
-		{
-			myPlayerState = EPlayerState::USEHOOKONAIR;
-		}
+		NoHookOnAirState();
 		break;
 	default:
 		
@@ -314,9 +281,66 @@ void APlayerCharacter::AdjustBouncing()
 }
 
 //////////////////////////////////////////////////////////////////////////
+// State transition
+
+void APlayerCharacter::IdleState()
+{
+	if (isOnGround)
+	{
+		myPlayerState = EPlayerState::RUNNING;
+	}
+	else
+	{
+		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+	}
+}
+
+void APlayerCharacter::RunningState()
+{
+	if (!isOnGround)
+	{
+		if (!isOnHook)
+		{
+			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		}
+		else
+		{
+			myPlayerState = EPlayerState::USEHOOKONAIR;
+		}
+	}
+}
+
+void APlayerCharacter::HookOnAirState()
+{
+	if (isOnGround)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
+		OnHitGround(); // Event cut hook
+		myPlayerState = EPlayerState::RUNNING;
+	}
+
+	if (!isOnHook)
+	{
+		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+	}
+}
+
+void APlayerCharacter::NoHookOnAirState()
+{
+	if (isOnGround)
+	{
+		myPlayerState = EPlayerState::RUNNING;
+	}
+	if (isOnHook)
+	{
+		myPlayerState = EPlayerState::USEHOOKONAIR;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
 // Getter
 
-UHookShooter * APlayerCharacter::GetHookShooter()
+UHookShooter *APlayerCharacter::GetHookShooter()
 {
 	return hookShooter;
 }
