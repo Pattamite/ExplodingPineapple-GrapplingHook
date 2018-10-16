@@ -65,6 +65,16 @@ APlayerCharacter::APlayerCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	// declare trigger capsule
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(55.f, 80.0f);;
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
+
+	// declare overlap events
+	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapBegin);
+	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapEnd);
 }
 
 // Called when the game starts
@@ -73,8 +83,9 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	myPlayerState = EPlayerState::IDLE;
-	CurrentState();
+	//CurrentState();
 	FindHookShooterComponent();
+	hookShooter->SetHook(FVector(0.f, 0.f, 0.f));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -187,30 +198,37 @@ void APlayerCharacter::UpdateCharacter()
 
 void APlayerCharacter::UpdatePlayerState()
 {
-	if (GetCharacterMovement()->IsMovingOnGround())
+	isOnGround = GetCharacterMovement()->IsMovingOnGround();
+	isOnHook = hookShooter->IsOnHook();
+
+	switch (myPlayerState)
 	{
-		myPlayerState = EPlayerState::RUNNING;
+	case EPlayerState::IDLE:
+		IdleState();
+		break;
+	case EPlayerState::RUNNING:
+		RunningState();
+		break;
+	case EPlayerState::USEHOOKONAIR:
+		HookOnAirState();
+		break;
+	case EPlayerState::NOTUSEHOOKONAIR:
+		NoHookOnAirState();
+		break;
+	default:
+		
+		break;
 	}
-	else
-	{
-		if (hookShooter->IsOnHook())
-		{
-			myPlayerState = EPlayerState::USEHOOKONAIR;
-		}
-		else
-		{
-			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
-		}
-	}
-	CurrentState();
+	//CurrentState();
 }
 
 void APlayerCharacter::UpdatePlayerRun()
 {
 	const FVector playerVelocity = GetVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	if (myPlayerState == EPlayerState::RUNNING)
+	//if (myPlayerState == EPlayerState::RUNNING)
+	if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}
@@ -218,6 +236,7 @@ void APlayerCharacter::UpdatePlayerRun()
 	{
 		StopRunning();
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 }
 
 void APlayerCharacter::CallJump()
@@ -246,10 +265,105 @@ void APlayerCharacter::Jumping()
 	return;
 }
 
+void APlayerCharacter::AdjustBouncing()
+{
+	const FVector playerVelocity = GetVelocity();
+	bounceForce = -(playerVelocity.X * bounceRatio);
+	if (FMath::Abs(bounceForce) < minBounceForce)
+	{
+		bounceForce = bounceForce > 0.0f ? 0.0f : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
+	}
+	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
+
+	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// State transition
+
+void APlayerCharacter::IdleState()
+{
+	if (isOnGround)
+	{
+		myPlayerState = EPlayerState::RUNNING;
+	}
+	else
+	{
+		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+	}
+}
+
+void APlayerCharacter::RunningState()
+{
+	if (!isOnGround)
+	{
+		if (!isOnHook)
+		{
+			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		}
+		else
+		{
+			myPlayerState = EPlayerState::USEHOOKONAIR;
+		}
+	}
+}
+
+void APlayerCharacter::HookOnAirState()
+{
+	if (isOnGround)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
+		OnHitGround(); // Event cut hook
+		myPlayerState = EPlayerState::RUNNING;
+	}
+
+	if (!isOnHook)
+	{
+		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+	}
+}
+
+void APlayerCharacter::NoHookOnAirState()
+{
+	if (isOnGround)
+	{
+		myPlayerState = EPlayerState::RUNNING;
+	}
+	if (isOnHook)
+	{
+		myPlayerState = EPlayerState::USEHOOKONAIR;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Getter
 
-UHookShooter * APlayerCharacter::GetHookShooter()
+UHookShooter *APlayerCharacter::GetHookShooter()
 {
 	return hookShooter;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Check overlap trigger
+void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
+		if (myPlayerState == EPlayerState::USEHOOKONAIR)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+			AdjustBouncing();
+		}
+	}
+}
+
+void APlayerCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
+	}
 }

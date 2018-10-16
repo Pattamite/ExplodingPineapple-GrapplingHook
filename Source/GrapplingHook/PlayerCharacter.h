@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
 #include "PaperCharacter.h"
 #include "HookShooter.h"
 #include "PlayerCharacter.generated.h"
@@ -36,6 +37,11 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	/** Create trigger capsule */
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+	/**/
+
 	UTextRenderComponent* TextComponent;
 
 	// Called when the game starts
@@ -62,6 +68,12 @@ protected:
 
 	void UpdatePlayerRun();
 
+	/** State behavior */
+	void IdleState();
+	void RunningState();
+	void HookOnAirState();
+	void NoHookOnAirState();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -75,17 +87,34 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float bounceRatio = 150.0f;
 	
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	float bounceForce = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float minBounceForce = 100000.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float maxBounceForce = 200000.0f;
+
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	bool isOnGround = false;
+
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	bool isOnHook = false;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();
 
-	EPlayerState myPlayerState;
 	FString EnumToString(const TCHAR*, int32) const;
 	UHookShooter* hookShooter = nullptr;
 
 	void FindHookShooterComponent();
 	void CurrentState();
+	void AdjustBouncing();
 
 public:
 	APlayerCharacter();
@@ -97,6 +126,24 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();
+
+	/*UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
+	
+	// declare overlap begin function
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// declare overlap end function
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/** Create player state variable */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+	EPlayerState myPlayerState;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
+	void OnHitGround();
 
 	void Running();
 	void Jumping();

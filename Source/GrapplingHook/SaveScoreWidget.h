@@ -7,11 +7,13 @@
 #include "WidgetTree.h"
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
+#include "HighScoreSystem.h"
 #include "SaveScoreWidget.generated.h"
 
 /**
  * 
  */
+
 UCLASS(BlueprintType, Blueprintable)
 class GRAPPLINGHOOK_API USaveScoreWidget : public UUserWidget
 {
@@ -22,12 +24,12 @@ private:
 
 public:
 	virtual void NativeConstruct() override;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+        float lastScore;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+        float highScore;
 
 public:
-	
-	UFUNCTION(BlueprintPure, Category = "Text")
-	FText GetscoreText() const;
-	
-	UPROPERTY()
-	class AGrapplingHookCharacter* characterInWorld;
+    UFUNCTION(BlueprintCallable, Category = "Widget")
+	void LoadSaveGame();
 };
