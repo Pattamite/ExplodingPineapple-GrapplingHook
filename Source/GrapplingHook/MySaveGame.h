@@ -18,14 +18,9 @@ public:
 	UMySaveGame();
 
 public:
-
 	UPROPERTY()
-	int Score;
-
-	UPROPERTY()
-		FString SaveSlotName;
-
-	UPROPERTY()
-		uint32 UserIndex;
+        TArray<float> highScore;
+    UPROPERTY()
+        float lastScore;
 		
 };

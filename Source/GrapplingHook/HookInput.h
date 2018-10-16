@@ -12,8 +12,8 @@
 #include "Math/UnrealMathUtility.h"
 #include "HookInput.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FVectorDelegate, FVector, vector);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVoidDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FVectorHookInputDelegate, FVector, vector);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVoidHookInputDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRAPPLINGHOOK_API UHookInput : public UActorComponent
@@ -32,21 +32,21 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
-        FVectorDelegate OnHookCommand;
-	UPROPERTY(BlueprintAssignable, Category = "Hook Input")
-		FVectorDelegate OnAimHookCommand;
+        FVectorHookInputDelegate OnHookCommand;
+	  UPROPERTY(BlueprintAssignable, Category = "Hook Input")
+		    FVectorHookInputDelegate OnAimHookCommand;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
-        FVoidDelegate OnUnHookCommand;
+        FVoidHookInputDelegate OnUnHookCommand;
     UPROPERTY(BlueprintAssignable, Category = "Hook Input")
-        FVoidDelegate OnJumpCommand;
+        FVoidHookInputDelegate OnJumpCommand;
 	  UFUNCTION(BlueprintCallable, Category = "Hook Input")
-		    bool IsTouched();
+		     bool IsTouched();
     UPROPERTY(BlueprintAssignable, Category = "Hook Touch Input")
-        FVectorDelegate OnStartHookTouch;
+        FVectorHookInputDelegate OnStartHookTouch;
     UPROPERTY(BlueprintAssignable, Category = "Hook Touch Input")
-        FVectorDelegate OnRepeatHookTouch;
+        FVectorHookInputDelegate OnRepeatHookTouch;
     UPROPERTY(BlueprintAssignable, Category = "Hook Touch Input")
-        FVectorDelegate OnStopHookTouch;
+        FVectorHookInputDelegate OnStopHookTouch;
 
 private:
     void BindingInputComponent();
