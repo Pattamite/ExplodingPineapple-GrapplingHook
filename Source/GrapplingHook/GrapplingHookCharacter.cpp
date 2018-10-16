@@ -82,8 +82,8 @@ AGrapplingHookCharacter::AGrapplingHookCharacter()
     bReplicates = true;
 
 	//Default Value
-	characterStats.score = 1;
-	isLoaded = false;
+	//characterStats.score = 1;
+	gameStart = false;
 
 }
 
@@ -109,8 +109,8 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
     
     UpdateCharacter();	
 	
-	if (!isLoaded) {
-		LoadGame();
+	/*if (!isLoaded) {
+		//LoadGame();
 		scorePlayer = 0;
 		isLoaded = true;
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, FString::Printf(TEXT("Score: %d"), scorePlayer));
@@ -118,18 +118,19 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
 
 	 scorePlayer++;
-	/* if (scorePlayer == 50) {
+	 //SaveGame();
+	 /*if (scorePlayer == 50) {
 		 SaveGame();
-	 }*/
-	 /*if (scorePlayer >= 300) {
+	 }
+	 if (scorePlayer >= 300) {
 		 LoadGame();
 	 }*/
 	 
-	 if (scorePlayer > characterStats.score) {
+	 /*if (scorePlayer > characterStats.score) {
 		 SaveGame();
-	 }
+	 }*/
 
-	// UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
+	 //UE_LOG(LogClass, Warning, TEXT("%d"), characterStats.score);
 }
 
 
@@ -189,23 +190,23 @@ void AGrapplingHookCharacter::UpdateCharacter()
     }
 }
 
-void AGrapplingHookCharacter::SaveGame() 
+/*void AGrapplingHookCharacter::SaveGame() 
 {
 	class UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-	
+	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex));
+
 	if (SaveGameInstance->IsValidLowLevel()) {
-		SaveGameInstance->Score = scorePlayer;
+		SaveGameInstance->score = scorePlayer;
 		UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("SAVED")));
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Score: %d"), SaveGameInstance->Score));
-	}
 	else {
 		UMySaveGame* SaveGameInstance_2 = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 
 		if (!SaveGameInstance_2)
 			return;
 		else {
-			SaveGameInstance->Score = scorePlayer;
+			SaveGameInstance->score = scorePlayer;
 			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("save2")));
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("score2: %d"), SaveGameInstance->Score));
@@ -246,8 +247,5 @@ void AGrapplingHookCharacter::LoadGame()
 		else {
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("No save game found")));
 		}
-		
 	}
-	
-	
-}
+}*/

@@ -65,6 +65,16 @@ APlayerCharacter::APlayerCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	// declare trigger capsule
+	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
+	TriggerCapsule->InitCapsuleSize(55.f, 80.0f);;
+	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerCapsule->SetupAttachment(RootComponent);
+
+	// declare overlap events
+	TriggerCapsule->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapBegin);
+	TriggerCapsule->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapEnd);
 }
 
 // Called when the game starts
@@ -73,7 +83,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	myPlayerState = EPlayerState::IDLE;
-	CurrentState();
+	//CurrentState();
 	FindHookShooterComponent();
 }
 
@@ -208,7 +218,7 @@ void APlayerCharacter::UpdatePlayerState()
 void APlayerCharacter::UpdatePlayerRun()
 {
 	const FVector playerVelocity = GetVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
 	if (myPlayerState == EPlayerState::RUNNING)
 	{
@@ -218,6 +228,7 @@ void APlayerCharacter::UpdatePlayerRun()
 	{
 		StopRunning();
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 }
 
 void APlayerCharacter::CallJump()
@@ -252,4 +263,31 @@ void APlayerCharacter::Jumping()
 UHookShooter * APlayerCharacter::GetHookShooter()
 {
 	return hookShooter;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Check overlap trigger
+void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
+		if (myPlayerState == EPlayerState::USEHOOKONAIR)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+			const FVector playerVelocity = GetVelocity();
+			bounceForce = -(playerVelocity.X * bounceRatio);
+			GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+			UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+		}
+	}
+}
+
+void APlayerCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
+	}
 }
