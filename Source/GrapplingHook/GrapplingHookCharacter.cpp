@@ -119,7 +119,7 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 		gameStart = true;
 		scorePlayer = 0;
 	}
-	 GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
+	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Score: %d"), scorePlayer));
 
 	 scorePlayer++;
 	 //SaveGame();
