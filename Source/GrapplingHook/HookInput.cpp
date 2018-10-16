@@ -79,6 +79,10 @@ void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
     {
         currentInput = Location;
         OnRepeatHookTouch.Broadcast(Location);
+
+		FVector DragDistance = currentInput - startInput;
+		DragDistance.Set(DragDistance.X, DragDistance.Y * -1.0f, 0.0f);
+		OnAimHookCommand.Broadcast(FVector(DragDistance.X * -1.0f, 0.0f, DragDistance.Y * -1.0f));
     }
 }
 

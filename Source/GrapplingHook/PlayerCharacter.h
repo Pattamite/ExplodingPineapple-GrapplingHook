@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
 #include "PaperCharacter.h"
 #include "HookShooter.h"
 #include "PlayerCharacter.generated.h"
@@ -35,6 +36,12 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+
+	/** create trigger capsule */
+	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
+	class UCapsuleComponent* TriggerCapsule;
+
+	/**/
 
 	UTextRenderComponent* TextComponent;
 
@@ -75,7 +82,12 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float bounceRatio = 150.0f;
 	
+	UPROPERTY(VisibleAnywhere, Category = Attribute)
+	float bounceForce = 0.0f;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void CallJump();
@@ -97,6 +109,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();
+
+	/*UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
+	
+	// declare overlap begin function
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// declare overlap end function
+	UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void Running();
 	void Jumping();
