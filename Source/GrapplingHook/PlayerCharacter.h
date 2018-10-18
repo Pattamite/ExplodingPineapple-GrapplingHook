@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "PaperCharacter.h"
 #include "HookShooter.h"
+#include "SoundSystem.h"
 #include "PlayerCharacter.generated.h"
 
 class UTextRenderComponent;

@@ -241,7 +241,11 @@ void APlayerCharacter::UpdatePlayerRun()
 
 void APlayerCharacter::CallJump()
 {
-    Jump();
+    if (CanJump())
+    {
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Jump, this->GetActorLocation());
+        Jump();
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

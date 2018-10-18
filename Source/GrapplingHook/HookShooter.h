@@ -10,6 +10,7 @@
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
 #include "UObject/ConstructorHelpers.h"
+#include "SoundSystem.h"
 
 #include "HookShooter.generated.h"
 
