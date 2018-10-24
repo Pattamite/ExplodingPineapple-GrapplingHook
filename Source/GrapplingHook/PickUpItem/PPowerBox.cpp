@@ -4,7 +4,7 @@
 
 PPowerBox::PPowerBox()
 {
-	pickupBox = new PPowerItem();
+	IPickUpBox::setEffectBox(new PPowerItemEffect());
 }
 
 PPowerBox::~PPowerBox()

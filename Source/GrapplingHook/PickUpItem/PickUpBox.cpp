@@ -5,7 +5,12 @@
 
 // Add default functionality here for any IPickUpBox functions that are not pure virtual.
 
-void IPickUpBox::getEffectBox()
+IPickUpItemEffect* IPickUpBox::getEffectBox()
+{
+	return pickupBox;
+}
+
+void IPickUpBox::activateEffectBox()
 {
 	pickupBox->effectItem();
 }
@@ -14,3 +19,4 @@ void IPickUpBox::setEffectBox(IPickUpItemEffect *newpickupBox)
 {
 	pickupBox = newpickupBox;
 }
+
