@@ -66,12 +66,14 @@ void AA_WorldChunk::PopulateMapDatabase(TArray<UPaperTileMap*> ChunkDatabaseRef)
             {
                 // Mark Ceiling start
                 EntCeil = true;
+                UE_LOG(LogTemp, Warning, TEXT("YY"));
             }
             else if (EntCeil == true && EntFloor == false && ! TileCollidable)
             {
                 // Mark Ceiling end
                 EntFloor = true;
                 CreatingData -> EntryCeil = index - 1;
+                UE_LOG(LogTemp, Warning, TEXT("YYY"));
             }
             else if (EntCeil == true && EntFloor == true && TileCollidable)
             {
@@ -79,6 +81,7 @@ void AA_WorldChunk::PopulateMapDatabase(TArray<UPaperTileMap*> ChunkDatabaseRef)
                 int32 EntSize = index - CreatingData -> EntryCeil;
                 CreatingData -> EntryFloor = index;
                 CreatingData -> EntrySize = EntSize;
+                UE_LOG(LogTemp, Warning, TEXT("%d"), EntSize);
                 CreatingData -> EntryCenter = (EntSize / 2) + CreatingData -> EntryCeil;
                 EntCeil = false;
             }
