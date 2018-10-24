@@ -8,10 +8,10 @@
 /**
  * 
  */
-class GRAPPLINGHOOK_API PPowerItem : public IPickUpItemEffect
+class GRAPPLINGHOOK_API PPowerItemEffect : public IPickUpItemEffect
 {
 public:
-	PPowerItem();
-	~PPowerItem();
+	PPowerItemEffect();
+	~PPowerItemEffect();
 	void effectItem();
 };

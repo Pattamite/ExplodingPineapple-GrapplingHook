@@ -2,14 +2,14 @@
 
 #include "PPowerItem.h"
 
-PPowerItem::PPowerItem()
+PPowerItemEffect::PPowerItemEffect()
 {
 }
 
-PPowerItem::~PPowerItem()
+PPowerItemEffect::~PPowerItemEffect()
 {
 }
 
-void PPowerItem::effectItem() {
+void PPowerItemEffect::effectItem() {
 	UE_LOG(LogTemp, Warning, TEXT("Power Up! In Effect"));
 }
