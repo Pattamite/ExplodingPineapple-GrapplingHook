@@ -4,12 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Delegates/Delegate.h"
-#include "GameFramework/Actor.h"
-#include "Kismet/GameplayStatics.h"
-#include "PlayerCharacter.h"
-#include "Engine/Engine.h"
-#include "HighScoreSystem.h"
 #include "GrapplingHookGameMode.generated.h"
 
 /**
