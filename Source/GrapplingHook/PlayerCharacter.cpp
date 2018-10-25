@@ -316,7 +316,9 @@ void APlayerCharacter::HookOnAirState()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
 		OnHitGround(); // Event cut hook
-		GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
+
+		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
+		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
 		myPlayerState = EPlayerState::RUNNING;
 	}
 
