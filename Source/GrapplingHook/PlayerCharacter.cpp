@@ -69,7 +69,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// declare trigger capsule
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 80.0f);;
+	TriggerCapsule->InitCapsuleSize(55.f, 90.0f);;
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
 
