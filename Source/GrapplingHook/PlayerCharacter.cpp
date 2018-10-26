@@ -268,14 +268,29 @@ void APlayerCharacter::Jumping()
 
 void APlayerCharacter::AdjustBouncing()
 {
+	//BounceByPreviousForce();
+	BounceByStaticForce();
+}
+
+void APlayerCharacter::BounceByPreviousForce()
+{
 	const FVector playerVelocity = GetVelocity();
-	/*bounceForce = -(playerVelocity.X * bounceRatio);
+	bounceForce = -(playerVelocity.X * bounceRatio);
 	if (FMath::Abs(bounceForce) < minBounceForce)
 	{
 		bounceForce = bounceForce > 0.0f ? 0.0f : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
 	}
-	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);*/
+	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
+	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+}
+
+void APlayerCharacter::BounceByStaticForce()
+{
+	const FVector playerVelocity = GetVelocity();
 	float prevBounceForceAbs = FMath::Abs(bounceForce);
+
 	bounceForce = playerVelocity.X >= 0.0f ? -prevBounceForceAbs : prevBounceForceAbs;
 	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));

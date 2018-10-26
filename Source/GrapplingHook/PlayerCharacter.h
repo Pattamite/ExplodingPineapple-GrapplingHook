@@ -88,12 +88,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float movementSpeed = 1.0f;
 
+	/// Bounce from static value force and reduce over the time
 	UPROPERTY(EditAnywhere, Category = Attribute)
-	float bounceRatio = 150.0f;
+	float staticBounceForce = 75000.0f;
 
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float reduceBounceForceRatio = 0.8f;
 
+	/// Bounce calculate by using force from player swing 
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float bounceRatio = 150.0f;
+	
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float minBounceForce = 50000.0f;
 
@@ -101,7 +106,7 @@ private:
 	float maxBounceForce = 75000.0f;
 
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
-	float bounceForce = maxBounceForce;
+	float bounceForce = staticBounceForce;
 
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
 	bool isOnGround = false;
@@ -118,6 +123,8 @@ private:
 	void FindHookShooterComponent();
 	void CurrentState();
 	void AdjustBouncing();
+	void BounceByPreviousForce();
+	void BounceByStaticForce();
 
 public:
 	APlayerCharacter();
