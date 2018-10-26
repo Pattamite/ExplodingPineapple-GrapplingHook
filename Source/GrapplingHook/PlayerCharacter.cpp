@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "PowerBoxItem.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -68,7 +69,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// declare trigger capsule
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 80.0f);;
+	TriggerCapsule->InitCapsuleSize(55.f, 90.0f);;
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
 
@@ -352,7 +353,20 @@ UHookShooter *APlayerCharacter::GetHookShooter()
 // Check overlap trigger
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && (OtherActor != this) && OtherComp)
+	// TODO cast item from item base class
+
+	APowerBoxItem* pbItem = Cast<APowerBoxItem>(OtherActor);
+
+	/*if (!(pbItem->IsValidLowLevel()))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Power box item can cast"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Power box item can cast"));
+	}*/
+
+	if (OtherActor && (OtherActor != this) && OtherComp && !(pbItem->IsValidLowLevel()))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 		if (myPlayerState == EPlayerState::USEHOOKONAIR)
