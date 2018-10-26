@@ -90,15 +90,18 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Attribute)
 	float bounceRatio = 150.0f;
-	
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float reduceBounceForceRatio = 0.8f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float minBounceForce = 50000.0f;
+
+	UPROPERTY(EditAnywhere, Category = Attribute)
+	float maxBounceForce = 75000.0f;
+
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
-	float bounceForce = 0.0f;
-
-	UPROPERTY(EditAnywhere, Category = Attribute)
-	float minBounceForce = 100000.0f;
-
-	UPROPERTY(EditAnywhere, Category = Attribute)
-	float maxBounceForce = 200000.0f;
+	float bounceForce = maxBounceForce;
 
 	UPROPERTY(VisibleAnywhere, Category = Attribute)
 	bool isOnGround = false;

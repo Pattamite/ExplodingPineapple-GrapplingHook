@@ -269,16 +269,19 @@ void APlayerCharacter::Jumping()
 void APlayerCharacter::AdjustBouncing()
 {
 	const FVector playerVelocity = GetVelocity();
-	bounceForce = -(playerVelocity.X * bounceRatio);
+	/*bounceForce = -(playerVelocity.X * bounceRatio);
 	if (FMath::Abs(bounceForce) < minBounceForce)
 	{
 		bounceForce = bounceForce > 0.0f ? 0.0f : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
 	}
-	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
-
+	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);*/
+	float prevBounceForceAbs = FMath::Abs(bounceForce);
+	bounceForce = playerVelocity.X >= 0.0f ? -prevBounceForceAbs : prevBounceForceAbs;
+	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
 	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	bounceForce = bounceForce * reduceBounceForceRatio;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -326,6 +329,7 @@ void APlayerCharacter::HookOnAirState()
 	if (!isOnHook)
 	{
 		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		bounceForce = maxBounceForce;
 	}
 }
 
