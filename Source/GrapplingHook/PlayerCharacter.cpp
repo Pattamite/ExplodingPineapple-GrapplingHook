@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "PowerBoxItem.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -68,7 +69,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// declare trigger capsule
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 80.0f);;
+	TriggerCapsule->InitCapsuleSize(55.f, 90.0f);;
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
 
@@ -271,6 +272,12 @@ void APlayerCharacter::Jumping()
 
 void APlayerCharacter::AdjustBouncing()
 {
+	//BounceByPreviousForce();
+	BounceByStaticForce();
+}
+
+void APlayerCharacter::BounceByPreviousForce()
+{
 	const FVector playerVelocity = GetVelocity();
 	bounceForce = -(playerVelocity.X * bounceRatio);
 	if (FMath::Abs(bounceForce) < minBounceForce)
@@ -278,10 +285,22 @@ void APlayerCharacter::AdjustBouncing()
 		bounceForce = bounceForce > 0.0f ? 0.0f : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
 	}
 	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
-
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
 	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+}
+
+void APlayerCharacter::BounceByStaticForce()
+{
+	const FVector playerVelocity = GetVelocity();
+	float prevBounceForceAbs = FMath::Abs(bounceForce);
+
+	bounceForce = playerVelocity.X >= 0.0f ? -prevBounceForceAbs : prevBounceForceAbs;
+	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
+	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	bounceForce = bounceForce * reduceBounceForceRatio;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -329,6 +348,7 @@ void APlayerCharacter::HookOnAirState()
 	if (!isOnHook)
 	{
 		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		bounceForce = maxBounceForce;
 	}
 }
 
@@ -356,7 +376,15 @@ UHookShooter *APlayerCharacter::GetHookShooter()
 // Check overlap trigger
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && (OtherActor != this) && OtherComp)
+	// TODO cast item from item base class
+	APowerBoxItem* pbItem = Cast<APowerBoxItem>(OtherActor);
+
+	// TODO activate item effect
+	// if object is item
+		// activate event of item effect
+		// destroy item
+
+	if (OtherActor && (OtherActor != this) && OtherComp && !(pbItem->IsValidLowLevel()))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 		if (myPlayerState == EPlayerState::USEHOOKONAIR)
