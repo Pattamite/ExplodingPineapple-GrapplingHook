@@ -86,9 +86,18 @@ void ATestGameMode::CheckHighScore()
     }
 }
 
-void ATestGameMode::GameOver()
+void ATestGameMode::AddCoin(int value)
 {
-    AHighScoreSystem::SaveScore(GetPlayerScore());
-    OnGameOver.Broadcast();
+    collectedCoin += value;
 }
 
+void ATestGameMode::GameOver()
+{
+    if (!isGameOver)
+    {
+        ACurrencySystem::AddCoin(collectedCoin);
+        AHighScoreSystem::SaveScore(GetPlayerScore());
+        OnGameOver.Broadcast();
+        isGameOver = true;
+    }
+}

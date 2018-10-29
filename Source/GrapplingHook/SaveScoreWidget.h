@@ -8,6 +8,7 @@
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
 #include "HighScoreSystem.h"
+#include "CurrencySystem.h"
 #include "SaveScoreWidget.generated.h"
 
 /**
@@ -28,6 +29,8 @@ public:
         float lastScore;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
         float highScore;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency")
+        int coin;
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Widget")
