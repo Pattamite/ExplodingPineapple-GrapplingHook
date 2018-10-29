@@ -23,9 +23,13 @@ class GRAPPLINGHOOK_API IPickUpBox
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	IPickUpItemEffect *pickupBox;
 
-	void getEffectBox();
+	IPickUpItemEffect* getEffectBox();
+	void activateEffectBox();
 	void setEffectBox(IPickUpItemEffect *pickupBox);
 	virtual void displayEffect() = 0;
+
+private:
+	IPickUpItemEffect* pickupBox;
+
 };

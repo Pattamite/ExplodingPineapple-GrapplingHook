@@ -2,14 +2,14 @@
 
 #include "PSpeedItem.h"
 
-PSpeedItem::PSpeedItem()
+PSpeedItemEffect::PSpeedItemEffect()
 {
 }
 
-PSpeedItem::~PSpeedItem()
+PSpeedItemEffect::~PSpeedItemEffect()
 {
 }
 
-void PSpeedItem::effectItem(){
+void PSpeedItemEffect::effectItem(){
 	UE_LOG(LogTemp, Warning, TEXT("Speed Up! In Effect"));
 }
