@@ -82,6 +82,7 @@ AHook* UHookShooter::SetHook(FVector location)
 			UE_LOG(LogTemp, Warning, TEXT("Create Hook at %s"), *location.ToString());
 			hook = newHook;
 			onHook = true;
+            ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Hook, location);
 			return hook;
 		}
 		else
@@ -100,6 +101,7 @@ void UHookShooter::RemoveHook()
 {
 	UWorld* const World = GetWorld();
 	if (World && hook) {
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Unhook, hook->GetActorLocation());
 		World->DestroyActor(hook);
 		onHook = false;
 		hook = nullptr;

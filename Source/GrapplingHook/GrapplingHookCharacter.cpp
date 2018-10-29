@@ -14,7 +14,7 @@
 #include "EngineUtils.h"
 
 
-DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
+//DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 int scorePlayer = 1;
 
@@ -119,14 +119,14 @@ void AGrapplingHookCharacter::Tick(float DeltaSeconds)
 
 	 scorePlayer++;
 	 //SaveGame();
-	 /*if (scorePlayer == 50) {
+	 if (scorePlayer == 50) {
 		 SaveGame();
 	 }
 	 if (scorePlayer >= 300) {
 		 LoadGame();
-	 }*/
+	 }
 	 
-	 /*if (scorePlayer > characterStats.score) {
+	 if (scorePlayer > characterStats.score) {
 		 SaveGame();
 	 }*/
 

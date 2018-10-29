@@ -19,6 +19,7 @@ void USaveScoreWidget::LoadSaveGame()
 	if (this->IsValidLowLevel()) {
         lastScore = AHighScoreSystem::LoadLastScore();
         highScore = AHighScoreSystem::LoadHighScore();
+        coin = ACurrencySystem::LoadCoin();
 	}
 
 }
