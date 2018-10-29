@@ -55,8 +55,11 @@ void AA_WorldChunk::PopulateMapDatabase(TArray<UPaperTileMap*> ChunkDatabaseRef)
         int32 ChunkY = CurrentLayer -> GetLayerHeight();
         bool EntCeil = false;
         bool EntFloor = false;
+        bool EntSet = false;
         bool ExtCeil = false;
         bool ExtFloor = false;
+        bool ExtSet = false;
+        CreatingData -> EntryCeil = 0;
         for (int index = 0; index < ChunkY; index = index + 1)
         {
             // ** --- Entry --- ** //
@@ -81,6 +84,16 @@ void AA_WorldChunk::PopulateMapDatabase(TArray<UPaperTileMap*> ChunkDatabaseRef)
                 CreatingData -> EntrySize = EntSize;
                 CreatingData -> EntryCenter = (EntSize / 2) + CreatingData -> EntryCeil;
                 EntCeil = false;
+                EntSet = true;
+            }
+            else if (index == ChunkY - 1 && (EntSet == false))
+            {
+                int32 EntSize = index - CreatingData -> EntryCeil;
+                CreatingData -> EntryFloor = index;
+                CreatingData -> EntrySize = EntSize;
+                CreatingData -> EntryCenter = (EntSize / 2) + CreatingData -> EntryCeil;
+                EntCeil = false;
+                EntSet = true;
             }
             // ** --- Exit --- ** //
             CurrentTile = CurrentLayer -> GetCell(ChunkX - 1, index).PackedTileIndex;
@@ -104,6 +117,16 @@ void AA_WorldChunk::PopulateMapDatabase(TArray<UPaperTileMap*> ChunkDatabaseRef)
                 CreatingData -> ExitSize = ExtSize;
                 CreatingData -> ExitCenter = (ExtSize / 2) + CreatingData -> ExitCeil;
                 ExtCeil = false;
+                ExtSet = true;
+            }
+            else if (index == ChunkY - 1 && (ExtSet == false))
+            {
+                int32 ExtSize = index - CreatingData -> ExitCeil;
+                CreatingData -> ExitFloor = index;
+                CreatingData -> ExitSize = ExtSize;
+                CreatingData -> ExitCenter = (ExtSize / 2) + CreatingData -> ExitCeil;
+                ExtCeil = false;
+                ExtSet = true;
             }
             if (EntCeil == false && EntFloor == true && ExtCeil == false && ExtFloor == true)
             {

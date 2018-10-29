@@ -227,8 +227,8 @@ void APlayerCharacter::UpdatePlayerRun()
 	const FVector playerVelocity = GetVelocity();
 	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 	// Move right endless
-	//if (myPlayerState == EPlayerState::RUNNING)
-	if (GetCharacterMovement()->IsMovingOnGround())
+	if (myPlayerState == EPlayerState::RUNNING)
+	//if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}
@@ -320,6 +320,9 @@ void APlayerCharacter::HookOnAirState()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
 		OnHitGround(); // Event cut hook
+
+		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
+		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
 		myPlayerState = EPlayerState::RUNNING;
 	}
 
