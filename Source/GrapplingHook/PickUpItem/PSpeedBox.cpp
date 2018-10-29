@@ -4,7 +4,7 @@
 
 PSpeedBox::PSpeedBox()
 {
-	pickupBox = new PSpeedItem();
+	IPickUpBox::setEffectBox(new PSpeedItemEffect());
 }
 
 PSpeedBox::~PSpeedBox()
