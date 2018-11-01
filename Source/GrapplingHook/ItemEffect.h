@@ -37,7 +37,7 @@ public:
 
 	bool DecreaseTime(float time);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(SimpleDisplay, EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float lifeTime = 0;
 
 private:

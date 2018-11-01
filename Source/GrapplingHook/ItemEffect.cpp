@@ -4,8 +4,8 @@
 
 void UItemEffect::OnStart(APlayerCharacter * player)
 {
-	remainingTime = lifeTime;
 	OnStart_BP(player);
+	remainingTime = lifeTime;
 }
 
 void UItemEffect::OnTick(float deltaTime, APlayerCharacter *player)
@@ -22,7 +22,7 @@ void UItemEffect::OnEnd(APlayerCharacter * player)
 bool UItemEffect::DecreaseTime(float time)
 {
 	remainingTime -= time;
-	return remainingTime <= 0;
+	return remainingTime <= 0.0f;
 }
 
 
