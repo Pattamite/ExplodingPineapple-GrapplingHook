@@ -23,11 +23,13 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Item")
 	void OnStart_BP(APlayerCharacter *player);
 
+
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	virtual void OnTick(float DeltaTime, APlayerCharacter *player);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Item")
 	void OnTick_BP(float DeltaTime, APlayerCharacter *player);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	virtual void OnEnd(APlayerCharacter *player);
