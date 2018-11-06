@@ -23,8 +23,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-    UFUNCTION(BlueprintCallable, Category = "Map Position")
+    UFUNCTION(BlueprintCallable, Category = "Map Chunk Position")
         const FVector GetSpawnLocation(FVector lastExitPoint);
+    UFUNCTION(BlueprintCallable, Category = "Map Chunk Position")
+        const FVector GetWorldExitLocation();
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         FVector entryPoint;

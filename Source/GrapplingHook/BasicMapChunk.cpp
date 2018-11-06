@@ -30,3 +30,8 @@ const FVector ABasicMapChunk::GetSpawnLocation(FVector lastExitPoint)
 {
     return lastExitPoint - entryPoint;
 }
+
+const FVector ABasicMapChunk::GetWorldExitLocation()
+{
+    return GetActorLocation() + exitPoint;
+}
