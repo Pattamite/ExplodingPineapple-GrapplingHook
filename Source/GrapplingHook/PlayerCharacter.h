@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "PaperCharacter.h"
 #include "HookShooter.h"
+#include "SoundSystem.h"
 #include "PlayerCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -37,10 +38,7 @@ class GRAPPLINGHOOK_API APlayerCharacter : public APaperCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	/** Create trigger capsule */
-	UPROPERTY(VisibleAnywhere, Category = "Trigger Capsule")
-	class UCapsuleComponent* TriggerCapsule;
-	/**/
+	
 
 	UTextRenderComponent* TextComponent;
 
@@ -133,6 +131,11 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	/** Create trigger capsule */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Trigger Capsule")
+		class UCapsuleComponent* TriggerCapsule;
+	/**/
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();

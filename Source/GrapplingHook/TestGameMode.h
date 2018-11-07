@@ -10,6 +10,7 @@
 #include "PlayerCharacter.h"
 #include "Engine/Engine.h"
 #include "HighScoreSystem.h"
+#include "CurrencySystem.h"
 #include "TestGameMode.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatGameModeDelegate, float, value);
@@ -31,6 +32,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Score")
         void AddPlayerScore(float value);
 
+    UFUNCTION(BlueprintCallable, Category = "Currency")
+        void AddCoin(int value);
+
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
@@ -39,20 +43,25 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOver;
 
+protected:
+    UPROPERTY(BlueprintReadOnly)
+        float playerStartPosition = 0.0f;
+    UPROPERTY(BlueprintReadWrite)
+        float scorePerDistance = 0.1f;
+
 private:
     void SetHighScore();
     void CheckHighScore();
     UFUNCTION(BlueprintCallable, Category = "Debug")
         void GameOver();
     
-
     APawn* player = nullptr;
-    float playerStartPosition = 0.0f;
-    UPROPERTY(EditAnywhere)
-        float scorePerDistance = 0.1f;
+    
     float currentBonusScore = 0.0f;
 
     float currentHighScore = 0.0f;
     bool isPassHighScore = false;
     bool isPassHighScoreFirstTime = false;
+    bool isGameOver = false;
+    int collectedCoin = 0;
 };

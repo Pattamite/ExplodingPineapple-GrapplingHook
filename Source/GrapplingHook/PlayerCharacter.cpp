@@ -9,7 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
-#include "PowerBoxItem.h"
+//#include "PowerBoxItem.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -242,7 +242,11 @@ void APlayerCharacter::UpdatePlayerRun()
 
 void APlayerCharacter::CallJump()
 {
-    Jump();
+    if (CanJump())
+    {
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Jump, this->GetActorLocation());
+        Jump();
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -373,14 +377,14 @@ UHookShooter *APlayerCharacter::GetHookShooter()
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// TODO cast item from item base class
-	APowerBoxItem* pbItem = Cast<APowerBoxItem>(OtherActor);
+	//APowerBoxItem* pbItem = Cast<APowerBoxItem>(OtherActor);
 
 	// TODO activate item effect
 	// if object is item
 		// activate event of item effect
 		// destroy item
 
-	if (OtherActor && (OtherActor != this) && OtherComp && !(pbItem->IsValidLowLevel()))
+	if (OtherActor && (OtherActor != this) && OtherComp )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 		if (myPlayerState == EPlayerState::USEHOOKONAIR)
