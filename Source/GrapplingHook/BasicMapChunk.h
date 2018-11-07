@@ -4,25 +4,33 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Components/ChildActorComponent.h"
 #include "Runtime/Engine/Classes/Engine/TargetPoint.h"
 #include "BasicMapChunk.generated.h"
+
+USTRUCT(BlueprintType)
+struct FLoadedMapChunk
+{
+    GENERATED_USTRUCT_BODY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UChildActorComponent* ChunkChildComponent;
+};
 
 UCLASS()
 class GRAPPLINGHOOK_API ABasicMapChunk : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ABasicMapChunk();
+    GENERATED_BODY()
+public:
+    // Sets default values for this actor's properties
+    ABasicMapChunk();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
     UFUNCTION(BlueprintCallable, Category = "Map Chunk Position")
         const FVector GetSpawnLocation(FVector lastExitPoint);
     UFUNCTION(BlueprintCallable, Category = "Map Chunk Position")
@@ -32,7 +40,4 @@ public:
         FVector entryPoint;
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         FVector exitPoint;
-
-    
-
 };
