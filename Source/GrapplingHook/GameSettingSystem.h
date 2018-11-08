@@ -28,6 +28,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static bool LoadInvertrdControl();
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
+        static void TempSaveSfxVolume(float value);
+    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
+        static void TempSaveMusicVolume(float value);
+    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
+        static void TempSaveInvertrdControl(bool value);
+    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void SaveSfxVolume(float value);
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void SaveMusicVolume(float value);

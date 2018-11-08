@@ -10,6 +10,7 @@
 #include "Engine/Engine.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "Math/UnrealMathUtility.h"
+#include "GameSettingSystem.h"
 #include "HookInput.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FVectorHookInputDelegate, FVector, vector);
@@ -53,6 +54,7 @@ private:
     void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
     void TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location);
     void TouchStop(ETouchIndex::Type FingerIndex, FVector Location);
+    float GetInvertedControlValue();
     int GetFingerIndexName(ETouchIndex::Type FingerIndex) const;
     UFUNCTION(BlueprintCallable, Category = "UI Button")
         void ButtonPress();
@@ -73,7 +75,7 @@ private:
         float inputTreshold = 20.0f;
     FVector hookAngleVector = FVector(0.0f, 0.0f, 0.0f);
     bool isEnable = true;
-
+    
     FName CutHookActionName = "CutHook";
     
 };

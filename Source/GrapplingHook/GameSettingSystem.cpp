@@ -45,7 +45,7 @@ USettingSaveGame* AGameSettingSystem::LoadSettingSaveGame()
     USettingSaveGame* LoadGameInstance = Cast<USettingSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
     if (LoadGameInstance->IsValidLowLevel())
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Setting save Found")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Setting save Found")));
         return LoadGameInstance;
     }
 
@@ -95,6 +95,21 @@ float AGameSettingSystem::LoadMusicVolume()
 bool AGameSettingSystem::LoadInvertrdControl()
 {
     return currentInvertedControl;
+}
+
+void AGameSettingSystem::TempSaveSfxVolume(float value)
+{
+    currentSfxVolume = value;
+}
+
+void AGameSettingSystem::TempSaveMusicVolume(float value)
+{
+    currentMusicVolume = value;
+}
+
+void AGameSettingSystem::TempSaveInvertrdControl(bool value)
+{
+    currentInvertedControl = value;
 }
 
 void AGameSettingSystem::SaveSfxVolume(float value)
