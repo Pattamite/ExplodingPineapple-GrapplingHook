@@ -8,5 +8,3 @@ UItemCollectionSaveGame::UItemCollectionSaveGame()
 	slimeTrail = 0;
 	grappleSkip = 0;
 }
-
-

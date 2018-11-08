@@ -60,6 +60,8 @@ private:
         void UnHookButtonPress();
     UFUNCTION(BlueprintCallable, Category = "UI Button")
         void JumpButtonPress();
+    UFUNCTION(BlueprintCallable, Category = "State")
+        void SetEnable(bool isEnable);
 
     AActor* owner;
 
@@ -70,7 +72,7 @@ private:
     UPROPERTY(EditAnywhere)
         float inputTreshold = 20.0f;
     FVector hookAngleVector = FVector(0.0f, 0.0f, 0.0f);
-
+    bool isEnable = true;
 
     FName CutHookActionName = "CutHook";
     

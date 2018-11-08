@@ -16,6 +16,14 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatGameModeDelegate, float, value);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVoidGameModeDelegate);
 
+UENUM(BlueprintType)
+enum class EGameOverEnum : uint8
+{
+    GameOver_Default    UMETA(DisplayName = "Default"),
+    GameOver_Pitfall	UMETA(DisplayName = "Pitfall"),
+    GameOver_Chaser 	UMETA(DisplayName = "Chaser")
+};
+
 UCLASS()
 class GRAPPLINGHOOK_API ATestGameMode : public AGameModeBase
 {
@@ -42,6 +50,10 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOver;
+    UPROPERTY(BlueprintAssignable, Category = "Game Event")
+        FVoidGameModeDelegate OnGameOverByPitfall;
+    UPROPERTY(BlueprintAssignable, Category = "Game Event")
+        FVoidGameModeDelegate OnGameOverByChaser;
 
 protected:
     UPROPERTY(BlueprintReadOnly)
@@ -53,7 +65,7 @@ private:
     void SetHighScore();
     void CheckHighScore();
     UFUNCTION(BlueprintCallable, Category = "Debug")
-        void GameOver();
+        void GameOver(EGameOverEnum condition);
     
     APawn* player = nullptr;
     

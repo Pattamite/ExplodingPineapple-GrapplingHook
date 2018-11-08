@@ -32,7 +32,16 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	TArray<UItemEffect*> removeEffects;
 
 	for (int i = 0; i < effects.Num(); i++) {
-		effects[i]->OnTick(DeltaTime, player);
+		if (effects[i]->IsValidLowLevel()) 
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Effect[i] is valid"));
+			effects[i]->OnTick(DeltaTime, player);
+		}
+		else 
+		{
+			UE_LOG(LogTemp, Error, TEXT("Effect[i] is null"));
+		}
+
 		if (effects[i]->DecreaseTime(DeltaTime)) {
 			effects[i]->OnEnd(player);
 			removeEffects.Add(effects[i]);
@@ -45,6 +54,11 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 
 void UItemCollector::AddItemEffect(UItemEffect *effect) {
+	UItemEffect *oldEffect = FindEffect(effect->name);
+	if (oldEffect != nullptr) {
+		oldEffect->OnStart(player);
+		return;
+	}
 	effect->OnStart(player);
 	if (effect->lifeTime > 0) {
 		effects.Add(effect);
@@ -72,6 +86,19 @@ void UItemCollector::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 	ABasePickUpItem* item = Cast<ABasePickUpItem>(OtherActor);
 	if (item != nullptr) {
 		UItemEffect *effect = item->Collect();
-		AddItemEffect(effect);
+		if (effect->IsValidLowLevel())
+			AddItemEffect(effect);
+		else
+			UE_LOG(LogTemp, Error, TEXT("Effect is null"));
 	}
+}
+
+UItemEffect* UItemCollector::FindEffect(FString name)
+{
+	for (int i = 0; i < effects.Num(); i++) {
+		if (effects[i]->name.Compare(name)) {
+			return effects[i];
+		}
+	}
+	return nullptr;
 }

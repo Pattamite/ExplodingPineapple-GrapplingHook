@@ -23,8 +23,5 @@ public:
 	UPROPERTY()
 		int slimeTrail;
 	UPROPERTY()
-		int grappleSkip;
-
-	
-	
+		int grappleSkip;	
 };
