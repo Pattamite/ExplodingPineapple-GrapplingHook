@@ -17,8 +17,14 @@ class GRAPPLINGHOOK_API AItemCollectionSystem : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AItemCollectionSystem();
-	
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void AddAcid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void AddSlimeTrail();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void AddGrappleSkip();
 	static UItemCollectionSaveGame* LoadItemCollectionSaveGame();
+	static void SaveAllItemCollection();
 
 protected:
 	// Called when the game starts or when spawned
