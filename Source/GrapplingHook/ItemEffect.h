@@ -42,6 +42,9 @@ public:
 	UPROPERTY(SimpleDisplay, EditAnywhere, BlueprintReadWrite, Category = "Item")
 	float lifeTime = 0;
 
+	UPROPERTY(SimpleDisplay, BlueprintReadWrite, Category = "Item")
+	FString name = FString(TEXT(""));
+
 private:
 	float remainingTime = 0;
 };

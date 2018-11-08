@@ -38,3 +38,4 @@ void UItemEffect::OnTick_BP_Implementation(float DeltaTime, APlayerCharacter * p
 void UItemEffect::OnEnd_BP_Implementation(APlayerCharacter * player)
 {
 }
+

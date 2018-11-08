@@ -45,6 +45,11 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 
 void UItemCollector::AddItemEffect(UItemEffect *effect) {
+	UItemEffect *oldEffect = FindEffect(effect->name);
+	if (oldEffect != nullptr) {
+		oldEffect->OnStart(player);
+		return;
+	}
 	effect->OnStart(player);
 	if (effect->lifeTime > 0) {
 		effects.Add(effect);
@@ -74,4 +79,14 @@ void UItemCollector::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 		UItemEffect *effect = item->Collect();
 		AddItemEffect(effect);
 	}
+}
+
+UItemEffect* UItemCollector::FindEffect(FString name)
+{
+	for (int i = 0; i < effects.Num(); i++) {
+		if (effects[i]->name.Compare(name)) {
+			return effects[i];
+		}
+	}
+	return nullptr;
 }
