@@ -14,7 +14,17 @@ class GRAPPLINGHOOK_API USettingSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
-	
+public:
+    USettingSaveGame();
+
+public:
+    UPROPERTY()
+        float sfxVolume;
+    UPROPERTY()
+        float musicVolume;
+    UPROPERTY()
+        bool isInvertedControl;
+
 	
 	
 };
