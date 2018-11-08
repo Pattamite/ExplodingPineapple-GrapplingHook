@@ -91,13 +91,28 @@ void ATestGameMode::AddCoin(int value)
     collectedCoin += value;
 }
 
-void ATestGameMode::GameOver()
+void ATestGameMode::GameOver(EGameOverEnum condition)
 {
     if (!isGameOver)
     {
+        isGameOver = true;
         ACurrencySystem::AddCoin(collectedCoin);
         AHighScoreSystem::SaveScore(GetPlayerScore());
-        OnGameOver.Broadcast();
-        isGameOver = true;
+
+        switch (condition)
+        {
+            case EGameOverEnum::GameOver_Default:
+                OnGameOver.Broadcast();
+                break;
+            case EGameOverEnum::GameOver_Pitfall:
+                OnGameOverByPitfall.Broadcast();
+                break;
+            case EGameOverEnum::GameOver_Chaser:
+                OnGameOverByChaser.Broadcast();
+                break;
+            default:
+                OnGameOver.Broadcast();
+                break;
+        } 
     }
 }
