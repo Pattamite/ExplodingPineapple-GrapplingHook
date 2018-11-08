@@ -60,7 +60,7 @@ AHook* UHookShooter::ShootHookByDirection(FVector direction, float hookLength)
 		OUT HitResult,
 		start,
 		end,
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldStatic),
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldDynamic),
 		TraceParameters
 	);
 	if (hit) {
