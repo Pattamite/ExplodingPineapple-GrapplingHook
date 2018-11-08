@@ -14,7 +14,14 @@ class GRAPPLINGHOOK_API UItemCollectionSaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	UItemCollectionSaveGame();
+
+public:
+	UPROPERTY()
+		int acid;
+	UPROPERTY()
+		int slimeTrail;
+	UPROPERTY()
+		int grappleSkip;	
 };
