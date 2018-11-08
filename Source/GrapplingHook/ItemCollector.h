@@ -36,6 +36,8 @@ public:
 	void SetPlayer(APlayerCharacter *newPlayer);
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void SetupColider(UPrimitiveComponent* component);
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	UItemEffect* FindEffect(FString name);
 
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
