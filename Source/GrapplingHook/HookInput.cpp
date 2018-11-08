@@ -64,7 +64,7 @@ void UHookInput::JumpButtonPress()
 
 void UHookInput::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if (!isTouched)
+    if (!isTouched && isEnable)
     {
         startInput = Location;
         currentTouchIndex = GetFingerIndexName(FingerIndex);
@@ -75,7 +75,7 @@ void UHookInput::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
 
 void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if (GetFingerIndexName(FingerIndex) == currentTouchIndex)
+    if (GetFingerIndexName(FingerIndex) == currentTouchIndex && isEnable)
     {
         currentInput = Location;
         OnRepeatHookTouch.Broadcast(Location);
@@ -88,7 +88,7 @@ void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
 
 void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if (GetFingerIndexName(FingerIndex) == currentTouchIndex)
+    if (GetFingerIndexName(FingerIndex) == currentTouchIndex && isEnable)
     {
         currentInput = Location;
 
@@ -108,6 +108,10 @@ void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
 
         OnStopHookTouch.Broadcast(Location);
     }
+}
+void UHookInput::SetEnable(bool isEnable)
+{
+    this->isEnable = isEnable;
 }
 
 int UHookInput::GetFingerIndexName(ETouchIndex::Type FingerIndex) const
