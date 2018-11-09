@@ -17,6 +17,7 @@ void USaveScoreWidget::NativeConstruct() {
 void USaveScoreWidget::LoadSaveGame()
 {
 	if (this->IsValidLowLevel()) {
+        scoreBoard = AHighScoreSystem::LoadLeaderboard();
         lastScore = AHighScoreSystem::LoadLastScore();
         highScore = AHighScoreSystem::LoadHighScore();
         coin = ACurrencySystem::LoadCoin();
