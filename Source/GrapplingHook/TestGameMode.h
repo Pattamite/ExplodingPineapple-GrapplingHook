@@ -42,6 +42,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Currency")
         void AddCoin(int value);
+	UFUNCTION(BlueprintCallable, Category = "Currency")
+		int GetCoin();
+
 
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
