@@ -150,6 +150,10 @@ void APlayerCharacter::UpdateAnimation()
 	case EPlayerState::NOTUSEHOOKONAIR:
 		desiredAnimation = IdleAnimation;
 		break;
+	case EPlayerState::DIED:
+		// TODO add died animation
+		desiredAnimation = IdleAnimation;
+		break;
 	default:
 		desiredAnimation = IdleAnimation;
 		break;
@@ -171,12 +175,15 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Note: the 'Jump' action is bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	if (myPlayerState != EPlayerState::DIED)
+	{
+		// Note: the 'Jump' action is bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
+		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+		PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCharacter::TouchStopped);
+		PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCharacter::TouchStarted);
+		PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCharacter::TouchStopped);
+	}
 }
 
 void APlayerCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -216,6 +223,9 @@ void APlayerCharacter::UpdatePlayerState()
 		break;
 	case EPlayerState::NOTUSEHOOKONAIR:
 		NoHookOnAirState();
+		break;
+	case EPlayerState::DIED:
+		DiedState();
 		break;
 	default:
 		
@@ -304,6 +314,12 @@ void APlayerCharacter::BounceByStaticForce()
 	bounceForce = bounceForce * reduceBounceForceRatio;
 }
 
+void APlayerCharacter::PlayerDied()
+{
+	myPlayerState = EPlayerState::DIED;
+	return;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // State transition
 
@@ -363,6 +379,11 @@ void APlayerCharacter::NoHookOnAirState()
 	{
 		myPlayerState = EPlayerState::USEHOOKONAIR;
 	}
+}
+
+void APlayerCharacter::DiedState()
+{
+	StopRunning();
 }
 
 //////////////////////////////////////////////////////////////////////////
