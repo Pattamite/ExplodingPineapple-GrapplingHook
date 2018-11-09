@@ -315,6 +315,16 @@ void APlayerCharacter::PlayerDied()
 	return;
 }
 
+bool APlayerCharacter::IsDead()
+{
+	if (myPlayerState == EPlayerState::DIED)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // State transition
 

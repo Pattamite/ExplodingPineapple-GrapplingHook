@@ -145,6 +145,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void PlayerDied();
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	bool IsDead();
+
 	/*UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
 	
