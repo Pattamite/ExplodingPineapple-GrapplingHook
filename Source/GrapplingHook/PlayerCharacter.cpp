@@ -10,6 +10,7 @@
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "BasePickUpItem.h"
+#include "TestGameMode.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -384,13 +385,28 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 		// activate event of item effect
 		// destroy item
 
-	if (OtherActor && (OtherActor != this) && OtherComp && !(pickUpItem->IsValidLowLevel()))
+	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
-		if (myPlayerState == EPlayerState::USEHOOKONAIR)
+		if (!(pickUpItem->IsValidLowLevel()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
-			AdjustBouncing();
+			if (myPlayerState == EPlayerState::USEHOOKONAIR)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+				AdjustBouncing();
+			}
+		}
+
+		UE_LOG(LogTemp, Error, TEXT("Object name: %s"), *OtherComp->GetName());
+
+		if (OtherComp->ComponentHasTag(FName("Hazard")))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Game over"));
+			ATestGameMode* testGameMode = Cast<ATestGameMode>(GetWorld()->GetAuthGameMode());
+			if (testGameMode->IsValidLowLevel())
+			{
+				testGameMode->GameOver(EGameOverEnum::GameOver_Pitfall);
+			}
 		}
 	}
 }

@@ -54,6 +54,8 @@ public:
         FVoidGameModeDelegate OnGameOverByPitfall;
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOverByChaser;
+	UFUNCTION(BlueprintCallable, Category = "Debug")
+		void GameOver(EGameOverEnum condition);
 
 protected:
     UPROPERTY(BlueprintReadOnly)
@@ -64,8 +66,6 @@ protected:
 private:
     void SetHighScore();
     void CheckHighScore();
-    UFUNCTION(BlueprintCallable, Category = "Debug")
-        void GameOver(EGameOverEnum condition);
     
     APawn* player = nullptr;
     
