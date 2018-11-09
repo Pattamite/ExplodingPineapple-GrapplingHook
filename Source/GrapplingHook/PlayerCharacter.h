@@ -161,7 +161,7 @@ public:
 	EPlayerState myPlayerState;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
-	void OnHitGround();
+	void OnRemoveHook();
 
 	void Running();
 	void Jumping();

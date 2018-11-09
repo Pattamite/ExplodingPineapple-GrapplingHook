@@ -231,16 +231,12 @@ void APlayerCharacter::UpdatePlayerState()
 		
 		break;
 	}
-	//CurrentState();
 }
 
 void APlayerCharacter::UpdatePlayerRun()
 {
 	const FVector playerVelocity = GetVelocity();
-	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	// Move right endless
 	if (myPlayerState == EPlayerState::RUNNING)
-	//if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}
@@ -248,7 +244,6 @@ void APlayerCharacter::UpdatePlayerRun()
 	{
 		StopRunning();
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 }
 
 void APlayerCharacter::CallJump()
@@ -271,7 +266,7 @@ void APlayerCharacter::Running()
 
 void APlayerCharacter::StopRunning()
 {
-	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+	AddMovementInput(FVector(0.0f, 0.0f, 0.0f), 0);
 	return;
 }
 
@@ -355,7 +350,7 @@ void APlayerCharacter::HookOnAirState()
 	if (isOnGround)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
-		OnHitGround(); // Event cut hook
+		OnRemoveHook(); // Event cut hook
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
@@ -383,7 +378,17 @@ void APlayerCharacter::NoHookOnAirState()
 
 void APlayerCharacter::DiedState()
 {
+	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
 	StopRunning();
+	if (isOnHook)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("On hook cut it!"));
+		OnRemoveHook();
+	}
+	else 
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No hook! Died peacefully"));
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -398,18 +403,12 @@ UHookShooter *APlayerCharacter::GetHookShooter()
 // Check overlap trigger
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO cast item from item base class
-	ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(OtherActor);
-
-	// TODO activate item effect
-	// if object is item
-		// activate event of item effect
-		// destroy item
-
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
-		if (!(pickUpItem->IsValidLowLevel()))
+
+		ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(OtherActor);
+		if (!(pickUpItem->IsValidLowLevel()) && !OtherComp->ComponentHasTag(FName("Hazard")))
 		{
 			if (myPlayerState == EPlayerState::USEHOOKONAIR)
 			{
@@ -418,14 +417,12 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 			}
 		}
 
-		UE_LOG(LogTemp, Error, TEXT("Object name: %s"), *OtherComp->GetName());
-
 		if (OtherComp->ComponentHasTag(FName("Hazard")))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Game over"));
 			ATestGameMode* testGameMode = Cast<ATestGameMode>(GetWorld()->GetAuthGameMode());
 			if (testGameMode->IsValidLowLevel())
 			{
+				PlayerDied();
 				testGameMode->GameOver(EGameOverEnum::GameOver_Pitfall);
 			}
 		}
@@ -436,6 +433,6 @@ void APlayerCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, c
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
 	}
 }
