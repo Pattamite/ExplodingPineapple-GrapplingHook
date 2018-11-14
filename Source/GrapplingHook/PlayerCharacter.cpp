@@ -70,7 +70,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// declare trigger capsule
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 90.0f);;
+	TriggerCapsule->InitCapsuleSize(40.f, 40.0f);;
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
 
@@ -87,7 +87,6 @@ void APlayerCharacter::BeginPlay()
 	myPlayerState = EPlayerState::IDLE;
 	//CurrentState();
 	FindHookShooterComponent();
-	hookShooter->SetHook(FVector(0.f, 0.f, 0.f));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -167,6 +166,7 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	UpdateCharacter();
+	//UE_LOG(LogTemp, Warning, TEXT("Rotation: %f , %f, %f"), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 }
 
 
@@ -292,8 +292,8 @@ void APlayerCharacter::BounceByPreviousForce()
 	}
 	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
 }
 
 void APlayerCharacter::BounceByStaticForce()
@@ -304,8 +304,8 @@ void APlayerCharacter::BounceByStaticForce()
 	bounceForce = playerVelocity.X >= 0.0f ? -prevBounceForceAbs : prevBounceForceAbs;
 	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
 	bounceForce = bounceForce * reduceBounceForceRatio;
 }
 
@@ -359,11 +359,12 @@ void APlayerCharacter::HookOnAirState()
 {
 	if (isOnGround)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
 		OnRemoveHook(); // Event cut hook
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
+		//SetActorRotation(new FRotator(0.f, 0.f, 0.f), false);
 		myPlayerState = EPlayerState::RUNNING;
 	}
 
@@ -422,7 +423,7 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 		{
 			if (myPlayerState == EPlayerState::USEHOOKONAIR)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
 				AdjustBouncing();
 			}
 		}
