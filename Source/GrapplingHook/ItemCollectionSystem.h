@@ -23,6 +23,13 @@ public:
 		static void AddSlimeTrail();
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static void AddGrappleSkip();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static bool AcidIsValid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static bool SlimeTrailIsValid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static bool GrappleSkipIsValid();
+
 	static UItemCollectionSaveGame* LoadItemCollectionSaveGame();
 	static void SaveAllItemCollection();
 

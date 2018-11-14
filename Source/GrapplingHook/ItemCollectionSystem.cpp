@@ -71,9 +71,6 @@ void AItemCollectionSystem::AddAcid()
 			acid = 1;
 		}	
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->acid = LoadGameInstance->acid;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
 	SaveAllItemCollection();
 }
 
@@ -89,9 +86,6 @@ void AItemCollectionSystem::AddSlimeTrail()
 			slimeTrail = 1;
 		}
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->slimeTrail = LoadGameInstance->slimeTrail;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
 	SaveAllItemCollection();
 }
 
@@ -107,9 +101,6 @@ void AItemCollectionSystem::AddGrappleSkip()
 			grappleSkip = 1;
 		}
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->grappleSkip = LoadGameInstance->grappleSkip;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
 	SaveAllItemCollection();
 }
 
@@ -123,4 +114,31 @@ void AItemCollectionSystem::SaveAllItemCollection()
 
 	UE_LOG(LogTemp, Warning, TEXT("Saved"));
 	SaveItemCollectionSaveGame(SaveGameInstance);
+}
+
+bool AItemCollectionSystem::AcidIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->acid == 1)
+		return true;
+	else
+		return false;
+}
+
+bool AItemCollectionSystem::SlimeTrailIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->slimeTrail == 1)
+		return true;
+	else
+		return false;
+}
+
+bool AItemCollectionSystem::GrappleSkipIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->grappleSkip == 1)
+		return true;
+	else
+		return false;
 }
