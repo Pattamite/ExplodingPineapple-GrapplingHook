@@ -22,15 +22,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Coin")
 	bool IsActivation();
 
+	void DisableCoin();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	bool Active;
 	void Deactive();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Coin")
+	int coinTimer;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	FTimerHandle CountdownTimerHandle;
+
 
 	
 	

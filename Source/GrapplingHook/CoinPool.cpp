@@ -9,7 +9,7 @@ ACoinPool::ACoinPool()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT COMPONENT"));
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT COMPONENT"));
 
 }
 
@@ -55,6 +55,9 @@ ACoin * ACoinPool::SpawnCoin()
 {
 	UWorld* const World = GetWorld();
 	ACoin* coin = World->SpawnActor<ACoin>(CoinClass, FVector().ZeroVector, FRotator().ZeroRotator);
+	//TArray<UStaticMeshComponent> staticmesh;
+	//coin->GetComponents<UStaticMeshComponent>(staticmesh);
+	//this->GetComponents<UStaticMeshComponent>(CoinClass);
 	coin->SetActive(false);
 	//coin->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	//coin->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);

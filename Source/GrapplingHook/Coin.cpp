@@ -8,7 +8,8 @@ ACoin::ACoin()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	coinTimer = 5;
 }
 
 void ACoin::SetActive(bool isActive)
@@ -26,7 +27,21 @@ bool ACoin::IsActivation()
 void ACoin::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetWorldTimerManager().SetTimer(CountdownTimerHandle, this, &ACoin::DisableCoin, 1.0f, true);
+
+}
+
+void ACoin::DisableCoin()
+{
+	--coinTimer;
+	if (coinTimer <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(CountdownTimerHandle);
+		if (!IsActivation()) {
+			Deactive();
+		}
+		
+	}
 }
 
 void ACoin::Deactive()

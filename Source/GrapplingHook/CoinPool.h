@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Object Pool")
 		TSubclassOf<class ACoin> CoinClass;
 
-	UPROPERTY(EditAnywhere, Category = "Object Pool")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Object Pool")
 		int PoolSize = 50;
 
 	TArray<ACoin*> CoinCollection;
