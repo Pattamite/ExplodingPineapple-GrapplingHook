@@ -19,7 +19,7 @@ void UItemEffect::OnEnd(APlayerCharacter * player)
 	OnEnd_BP(player);
 }
 
-bool UItemEffect::DecreaseTime(float time)
+bool UItemEffect::DecreaseTime_Implementation(float time)
 {
 	remainingTime -= time;
 	return remainingTime <= 0.0f;
