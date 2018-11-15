@@ -45,6 +45,16 @@ UItemCollectionSaveGame* AItemCollectionSystem::LoadItemCollectionSaveGame()
 	return nullptr;
 }
 
+void AItemCollectionSystem::LoadAllItemCollection()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->IsValidLowLevel()) {
+		acid = LoadGameInstance->acid;
+		slimeTrail = LoadGameInstance->slimeTrail;
+		grappleSkip = LoadGameInstance->grappleSkip;
+	}
+}
+
 void AItemCollectionSystem::SaveItemCollectionSaveGame(UItemCollectionSaveGame* SaveGameInstance)
 {
 	if (SaveGameInstance->IsValidLowLevel())
@@ -62,14 +72,11 @@ void AItemCollectionSystem::CreateNewItemCollectionSaveGame()
 void AItemCollectionSystem::AddAcid()
 {
 
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		acid = LoadGameInstance->acid;
-		if (LoadGameInstance->acid == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Acid Added"));
-			acid = 1;
-		}	
+	LoadAllItemCollection();
+	if (acid == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Acid Added"));
+		acid = 1;
 	}
 	SaveAllItemCollection();
 }
@@ -77,30 +84,48 @@ void AItemCollectionSystem::AddAcid()
 void AItemCollectionSystem::AddSlimeTrail()
 {
 
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		slimeTrail = LoadGameInstance->slimeTrail;
-		if (LoadGameInstance->slimeTrail == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("slimeTrail Added"));
-			slimeTrail = 1;
-		}
+	LoadAllItemCollection();
+	if (slimeTrail == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("slimeTrail Added"));
+		slimeTrail = 1;
 	}
 	SaveAllItemCollection();
 }
 
 void AItemCollectionSystem::AddGrappleSkip()
 {
-	
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		grappleSkip = LoadGameInstance->grappleSkip;
-		if (LoadGameInstance->grappleSkip == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("grappleSkip Added"));
-			grappleSkip = 1;
-		}
+
+	LoadAllItemCollection();
+	if (grappleSkip == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("grappleSkip Added"));
+		grappleSkip = 1;
 	}
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveAcid()
+{
+	LoadAllItemCollection();
+	acid = 0;
+	UE_LOG(LogTemp, Warning, TEXT("acid removed"));
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveSlimeTrail()
+{
+	LoadAllItemCollection();
+	slimeTrail = 0;
+	UE_LOG(LogTemp, Warning, TEXT("slimeTrail removed"));
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveGrappleSkip()
+{
+	LoadAllItemCollection(); 
+	grappleSkip = 0;
+	UE_LOG(LogTemp, Warning, TEXT("grappleSkip removed"));
 	SaveAllItemCollection();
 }
 
