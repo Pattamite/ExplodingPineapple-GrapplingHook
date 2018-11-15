@@ -61,7 +61,6 @@ void AItemCollectionSystem::CreateNewItemCollectionSaveGame()
 
 void AItemCollectionSystem::AddAcid()
 {
-
 	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
 	if (LoadGameInstance->IsValidLowLevel()) {
 		acid = LoadGameInstance->acid;
@@ -141,4 +140,13 @@ bool AItemCollectionSystem::GrappleSkipIsValid()
 		return true;
 	else
 		return false;
+}
+
+void AItemCollectionSystem::ResetItemsInShopStore()
+{
+	acid = 0;
+	slimeTrail = 0;
+	grappleSkip = 0;
+
+	SaveAllItemCollection();
 }
