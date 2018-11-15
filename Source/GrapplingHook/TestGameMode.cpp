@@ -121,3 +121,13 @@ void ATestGameMode::GameOver(EGameOverEnum condition)
         } 
     }
 }
+
+bool ATestGameMode::IsGamePause()
+{
+    return isPause;
+}
+
+void ATestGameMode::SetGamePause(bool isPause)
+{
+    this->isPause = isPause;
+}

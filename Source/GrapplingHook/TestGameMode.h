@@ -46,6 +46,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Currency")
         int GetCoin();
 
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        bool IsGamePause();
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        void SetGamePause(bool isPause);
+
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
@@ -59,6 +64,8 @@ public:
         FVoidGameModeDelegate OnGameOverByChaser;
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOverByWater;
+
+
 
 protected:
     UPROPERTY(BlueprintReadOnly)
@@ -81,4 +88,5 @@ private:
     bool isPassHighScoreFirstTime = false;
     bool isGameOver = false;
     int collectedCoin = 0;
+    bool isPause = false;
 };

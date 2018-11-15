@@ -137,7 +137,6 @@ void AGameSettingSystem::SaveMusicVolume(float value)
     {
         currentSave->musicVolume = value;
         SaveSettingSaveGame(currentSave);
-
         currentMusicVolume = value;
     }
     else
