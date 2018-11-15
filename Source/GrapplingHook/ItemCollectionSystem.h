@@ -35,6 +35,8 @@ public:
 		static bool SlimeTrailIsValid();
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static bool GrappleSkipIsValid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void ResetItemsInShopStore();
 
 	static UItemCollectionSaveGame* LoadItemCollectionSaveGame();
 	static void LoadAllItemCollection();
