@@ -24,13 +24,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static void AddGrappleSkip();
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void RemoveAcid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void RemoveSlimeTrail();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void RemoveGrappleSkip();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static bool AcidIsValid();
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static bool SlimeTrailIsValid();
 	UFUNCTION(BlueprintCallable, Category = "Item Collection")
 		static bool GrappleSkipIsValid();
+	UFUNCTION(BlueprintCallable, Category = "Item Collection")
+		static void ResetItemsInShopStore();
 
 	static UItemCollectionSaveGame* LoadItemCollectionSaveGame();
+	static void LoadAllItemCollection();
 	static void SaveAllItemCollection();
 
 protected:
