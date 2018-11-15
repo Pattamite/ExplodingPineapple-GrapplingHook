@@ -91,6 +91,11 @@ void ATestGameMode::AddCoin(int value)
     collectedCoin += value;
 }
 
+int ATestGameMode::GetCoin()
+{
+    return collectedCoin;
+}
+
 void ATestGameMode::GameOver(EGameOverEnum condition)
 {
     if (!isGameOver)
