@@ -40,4 +40,8 @@ public:
         FVector entryPoint;
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
         FVector exitPoint;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+        FVector chunkTop;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+        FVector chunkBottom;
 };
