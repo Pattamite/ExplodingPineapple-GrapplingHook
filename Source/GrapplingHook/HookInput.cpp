@@ -117,7 +117,7 @@ void UHookInput::SetEnable(bool isEnable)
 
 float UHookInput::GetInvertedControlValue()
 {
-    return AGameSettingSystem::LoadInvertrdControl() ? -1.0f : 1.0f;
+    return AGameSettingSystem::LoadInvertrdControl() ? 1.0f : -1.0f;
 }
 
 int UHookInput::GetFingerIndexName(ETouchIndex::Type FingerIndex) const
