@@ -130,4 +130,16 @@ bool ATestGameMode::IsGamePause()
 void ATestGameMode::SetGamePause(bool isPause)
 {
     this->isPause = isPause;
+    UpdateGlobalTime();
+}
+
+void ATestGameMode::SetGlobalTime(float value)
+{
+    timeDilation = FMath::Clamp<float>(value, 0.0f, 1.0f);
+    UpdateGlobalTime();
+}
+
+void ATestGameMode::UpdateGlobalTime()
+{
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation * (isPause ? 0.0f : 1.0f));
 }

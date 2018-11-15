@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "Engine/Engine.h"
+#include "Math/UnrealMathUtility.h"
 #include "HighScoreSystem.h"
 #include "CurrencySystem.h"
 #include "TestGameMode.generated.h"
@@ -50,6 +51,8 @@ public:
         bool IsGamePause();
     UFUNCTION(BlueprintCallable, Category = "Game State")
         void SetGamePause(bool isPause);
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        void SetGlobalTime(float value);
 
     UFUNCTION(BlueprintCallable, Category = "Debug")
         void GameOver(EGameOverEnum condition);
@@ -78,6 +81,7 @@ protected:
 private:
     void SetHighScore();
     void CheckHighScore();
+    void UpdateGlobalTime();
     
     APawn* player = nullptr;
     
@@ -89,4 +93,5 @@ private:
     bool isGameOver = false;
     int collectedCoin = 0;
     bool isPause = false;
+    float timeDilation = 1.0f;
 };
