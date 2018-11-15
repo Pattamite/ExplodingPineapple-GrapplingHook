@@ -45,6 +45,16 @@ UItemCollectionSaveGame* AItemCollectionSystem::LoadItemCollectionSaveGame()
 	return nullptr;
 }
 
+void AItemCollectionSystem::LoadAllItemCollection()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->IsValidLowLevel()) {
+		acid = LoadGameInstance->acid;
+		slimeTrail = LoadGameInstance->slimeTrail;
+		grappleSkip = LoadGameInstance->grappleSkip;
+	}
+}
+
 void AItemCollectionSystem::SaveItemCollectionSaveGame(UItemCollectionSaveGame* SaveGameInstance)
 {
 	if (SaveGameInstance->IsValidLowLevel())
@@ -61,55 +71,60 @@ void AItemCollectionSystem::CreateNewItemCollectionSaveGame()
 
 void AItemCollectionSystem::AddAcid()
 {
-
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		acid = LoadGameInstance->acid;
-		if (LoadGameInstance->acid == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Acid Added"));
-			acid = 1;
-		}	
+	LoadAllItemCollection();
+	if (acid == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Acid Added"));
+		acid = 1;
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->acid = LoadGameInstance->acid;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
 	SaveAllItemCollection();
 }
 
 void AItemCollectionSystem::AddSlimeTrail()
 {
 
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		slimeTrail = LoadGameInstance->slimeTrail;
-		if (LoadGameInstance->slimeTrail == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("slimeTrail Added"));
-			slimeTrail = 1;
-		}
+	LoadAllItemCollection();
+	if (slimeTrail == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("slimeTrail Added"));
+		slimeTrail = 1;
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->slimeTrail = LoadGameInstance->slimeTrail;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
 	SaveAllItemCollection();
 }
 
 void AItemCollectionSystem::AddGrappleSkip()
 {
-	
-	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
-	if (LoadGameInstance->IsValidLowLevel()) {
-		grappleSkip = LoadGameInstance->grappleSkip;
-		if (LoadGameInstance->grappleSkip == 0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("grappleSkip Added"));
-			grappleSkip = 1;
-		}
+
+	LoadAllItemCollection();
+	if (grappleSkip == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("grappleSkip Added"));
+		grappleSkip = 1;
 	}
-	/*UItemCollectionSaveGame* SaveGameInstance = Cast<UItemCollectionSaveGame>(UGameplayStatics::CreateSaveGameObject(UItemCollectionSaveGame::StaticClass()));
-	SaveGameInstance->grappleSkip = LoadGameInstance->grappleSkip;
-	SaveItemCollectionSaveGame(SaveGameInstance);*/
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveAcid()
+{
+	LoadAllItemCollection();
+	acid = 0;
+	UE_LOG(LogTemp, Warning, TEXT("acid removed"));
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveSlimeTrail()
+{
+	LoadAllItemCollection();
+	slimeTrail = 0;
+	UE_LOG(LogTemp, Warning, TEXT("slimeTrail removed"));
+	SaveAllItemCollection();
+}
+
+void AItemCollectionSystem::RemoveGrappleSkip()
+{
+	LoadAllItemCollection(); 
+	grappleSkip = 0;
+	UE_LOG(LogTemp, Warning, TEXT("grappleSkip removed"));
 	SaveAllItemCollection();
 }
 
@@ -123,4 +138,40 @@ void AItemCollectionSystem::SaveAllItemCollection()
 
 	UE_LOG(LogTemp, Warning, TEXT("Saved"));
 	SaveItemCollectionSaveGame(SaveGameInstance);
+}
+
+bool AItemCollectionSystem::AcidIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->acid == 1)
+		return true;
+	else
+		return false;
+}
+
+bool AItemCollectionSystem::SlimeTrailIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->slimeTrail == 1)
+		return true;
+	else
+		return false;
+}
+
+bool AItemCollectionSystem::GrappleSkipIsValid()
+{
+	UItemCollectionSaveGame* LoadGameInstance = LoadItemCollectionSaveGame();
+	if (LoadGameInstance->grappleSkip == 1)
+		return true;
+	else
+		return false;
+}
+
+void AItemCollectionSystem::ResetItemsInShopStore()
+{
+	acid = 0;
+	slimeTrail = 0;
+	grappleSkip = 0;
+
+	SaveAllItemCollection();
 }

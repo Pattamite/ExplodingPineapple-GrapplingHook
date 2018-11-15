@@ -37,6 +37,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Item")
 	void OnEnd_BP(APlayerCharacter *player);
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Item")
 	bool DecreaseTime(float time);
 
 	UPROPERTY(SimpleDisplay, EditAnywhere, BlueprintReadWrite, Category = "Item")

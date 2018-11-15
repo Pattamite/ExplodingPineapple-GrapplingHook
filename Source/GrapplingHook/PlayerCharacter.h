@@ -17,7 +17,8 @@ enum class EPlayerState : uint8
 	IDLE UMETA(DisplayName = "Idle"),
 	RUNNING UMETA(DisplayName = "Running"),
 	USEHOOKONAIR UMETA(DisplayName = "UseHookOnAir"),
-	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir")
+	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir"),
+	DIED UMETA(DisplayName = "DIED")
 };
 
 /**
@@ -71,6 +72,7 @@ protected:
 	void RunningState();
 	void HookOnAirState();
 	void NoHookOnAirState();
+	void DiedState();
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -140,6 +142,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void PlayerDied();
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	bool IsDead();
+
 	/*UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
 	
@@ -156,7 +164,7 @@ public:
 	EPlayerState myPlayerState;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
-	void OnHitGround();
+	void OnRemoveHook();
 
 	void Running();
 	void Jumping();

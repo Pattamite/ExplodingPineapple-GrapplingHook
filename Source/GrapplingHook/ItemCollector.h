@@ -27,15 +27,19 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
+	UFUNCTION(BlueprintCallable, Category = "Item")
 	void AddItemEffect(UItemEffect *effect);
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	APlayerCharacter* GetPlayer();
+	
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void SetPlayer(APlayerCharacter *newPlayer);
+	
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void SetupColider(UPrimitiveComponent* component);
+	
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	UItemEffect* FindEffect(FString name);
 

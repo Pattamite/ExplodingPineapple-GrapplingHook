@@ -65,8 +65,6 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOverByWater;
 
-
-
 protected:
     UPROPERTY(BlueprintReadOnly)
         float playerStartPosition = 0.0f;
@@ -76,8 +74,6 @@ protected:
 private:
     void SetHighScore();
     void CheckHighScore();
-    UFUNCTION(BlueprintCallable, Category = "Debug")
-        void GameOver(EGameOverEnum condition);
     
     APawn* player = nullptr;
     
