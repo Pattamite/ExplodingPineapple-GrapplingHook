@@ -97,10 +97,6 @@ AHook* UHookShooter::SetHook(FVector location)
 	return nullptr;
 }
 
-void UHookShooter::OnHook()
-{
-}
-
 void UHookShooter::RemoveHook()
 {
 	UWorld* const World = GetWorld();

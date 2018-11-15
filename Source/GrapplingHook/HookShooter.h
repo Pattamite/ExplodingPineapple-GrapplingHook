@@ -42,8 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnyString")
 	AHook* SetHook(FVector location);
 	UFUNCTION(BlueprintCallable, Category = "AnyString")
-	void OnHook();
-	UFUNCTION(BlueprintCallable, Category = "AnyString")
 	void RemoveHook();
 	
 	UPROPERTY(EditAnyWhere)
