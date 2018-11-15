@@ -2,6 +2,7 @@
 
 #include "HookShooter.h"
 #include "BasePickUpItem.h"
+#include "BasicMapChunk.h"
 
 
 // Sets default values for this component's properties
@@ -64,8 +65,9 @@ AHook* UHookShooter::ShootHookByDirection(FVector direction, float hookLength)
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldDynamic),
 		TraceParameters
 	);
-	ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(HitResult.Actor);
-	if (hit && !(pickUpItem->IsValidLowLevel())) {
+	//ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(HitResult.Actor);
+	ABasicMapChunk* basicMap = Cast<ABasicMapChunk>(HitResult.Actor);
+	if (hit && basicMap->IsValidLowLevel()) {
 		UE_LOG(LogTemp, Warning, TEXT("Hit at %s"), *HitResult.Location.ToString());
 		return SetHook(HitResult.Location);
 	}

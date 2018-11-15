@@ -10,6 +10,7 @@
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "BasePickUpItem.h"
+#include "BasicMapChunk.h"
 #include "TestGameMode.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -418,8 +419,8 @@ void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
 
-		ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(OtherActor);
-		if (!(pickUpItem->IsValidLowLevel()) && !OtherComp->ComponentHasTag(FName("Hazard")))
+		ABasicMapChunk* basicMap = Cast<ABasicMapChunk>(OtherActor);
+		if (basicMap->IsValidLowLevel() && !OtherComp->ComponentHasTag(FName("Hazard")))
 		{
 			if (myPlayerState == EPlayerState::USEHOOKONAIR)
 			{
