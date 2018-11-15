@@ -51,6 +51,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Game State")
         void SetGamePause(bool isPause);
 
+    UFUNCTION(BlueprintCallable, Category = "Debug")
+        void GameOver(EGameOverEnum condition);
+
+
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
