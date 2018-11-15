@@ -21,7 +21,8 @@ enum class EGameOverEnum : uint8
 {
     GameOver_Default    UMETA(DisplayName = "Default"),
     GameOver_Pitfall	UMETA(DisplayName = "Pitfall"),
-    GameOver_Chaser 	UMETA(DisplayName = "Chaser")
+    GameOver_Chaser 	UMETA(DisplayName = "Chaser"),
+    GameOver_Water      UMETA(DisplayName = "Water")
 };
 
 UCLASS()
@@ -42,9 +43,13 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Currency")
         void AddCoin(int value);
-	UFUNCTION(BlueprintCallable, Category = "Currency")
-		int GetCoin();
+    UFUNCTION(BlueprintCallable, Category = "Currency")
+        int GetCoin();
 
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        bool IsGamePause();
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        void SetGamePause(bool isPause);
 
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
@@ -57,8 +62,8 @@ public:
         FVoidGameModeDelegate OnGameOverByPitfall;
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOverByChaser;
-	UFUNCTION(BlueprintCallable, Category = "Debug")
-		void GameOver(EGameOverEnum condition);
+    UPROPERTY(BlueprintAssignable, Category = "Game Event")
+        FVoidGameModeDelegate OnGameOverByWater;
 
 protected:
     UPROPERTY(BlueprintReadOnly)
@@ -79,4 +84,5 @@ private:
     bool isPassHighScoreFirstTime = false;
     bool isGameOver = false;
     int collectedCoin = 0;
+    bool isPause = false;
 };

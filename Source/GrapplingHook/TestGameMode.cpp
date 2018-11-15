@@ -93,7 +93,7 @@ void ATestGameMode::AddCoin(int value)
 
 int ATestGameMode::GetCoin()
 {
-	return collectedCoin;
+    return collectedCoin;
 }
 
 void ATestGameMode::GameOver(EGameOverEnum condition)
@@ -120,4 +120,14 @@ void ATestGameMode::GameOver(EGameOverEnum condition)
                 break;
         } 
     }
+}
+
+bool ATestGameMode::IsGamePause()
+{
+    return isPause;
+}
+
+void ATestGameMode::SetGamePause(bool isPause)
+{
+    this->isPause = isPause;
 }
