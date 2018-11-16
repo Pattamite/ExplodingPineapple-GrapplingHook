@@ -91,6 +91,11 @@ void ATestGameMode::AddCoin(int value)
     collectedCoin += value;
 }
 
+int ATestGameMode::GetCoin()
+{
+    return collectedCoin;
+}
+
 void ATestGameMode::GameOver(EGameOverEnum condition)
 {
     if (!isGameOver)
@@ -115,4 +120,26 @@ void ATestGameMode::GameOver(EGameOverEnum condition)
                 break;
         } 
     }
+}
+
+bool ATestGameMode::IsGamePause()
+{
+    return isPause;
+}
+
+void ATestGameMode::SetGamePause(bool isPause)
+{
+    this->isPause = isPause;
+    UpdateGlobalTime();
+}
+
+void ATestGameMode::SetGlobalTime(float value)
+{
+    timeDilation = FMath::Clamp<float>(value, 0.0f, 1.0f);
+    UpdateGlobalTime();
+}
+
+void ATestGameMode::UpdateGlobalTime()
+{
+    UGameplayStatics::SetGlobalTimeDilation(GetWorld(), timeDilation * (isPause ? 0.0f : 1.0f));
 }

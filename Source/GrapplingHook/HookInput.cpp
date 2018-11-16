@@ -82,7 +82,8 @@ void UHookInput::TouchRepeat(ETouchIndex::Type FingerIndex, FVector Location)
 
 		FVector DragDistance = currentInput - startInput;
 		DragDistance.Set(DragDistance.X, DragDistance.Y * -1.0f, 0.0f);
-		OnAimHookCommand.Broadcast(FVector(DragDistance.X * -1.0f, 0.0f, DragDistance.Y * -1.0f));
+        
+		OnAimHookCommand.Broadcast(FVector(DragDistance.X * GetInvertedControlValue(), 0.0f, DragDistance.Y * GetInvertedControlValue()));
     }
 }
 
@@ -97,7 +98,7 @@ void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
 
         if (DragDistance.Size() > inputTreshold)
         {
-            OnHookCommand.Broadcast(FVector(DragDistance.X * -1.0f, 0.0f, DragDistance.Y * -1.0f));
+            OnHookCommand.Broadcast(FVector(DragDistance.X * GetInvertedControlValue(), 0.0f, DragDistance.Y * GetInvertedControlValue()));
         }
         else
         {
@@ -112,6 +113,11 @@ void UHookInput::TouchStop(ETouchIndex::Type FingerIndex, FVector Location)
 void UHookInput::SetEnable(bool isEnable)
 {
     this->isEnable = isEnable;
+}
+
+float UHookInput::GetInvertedControlValue()
+{
+    return AGameSettingSystem::LoadInvertrdControl() ? 1.0f : -1.0f;
 }
 
 int UHookInput::GetFingerIndexName(ETouchIndex::Type FingerIndex) const

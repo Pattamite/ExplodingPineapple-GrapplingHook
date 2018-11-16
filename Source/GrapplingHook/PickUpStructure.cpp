@@ -15,7 +15,8 @@ APickUpStructure::APickUpStructure()
 	itemsPickUp->bGenerateOverlapEvents = true;
 	itemsPickUp->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	itemsPickUp->OnComponentBeginOverlap.AddDynamic(this, &APickUpStructure::OnOverlapBegin);
-	itemsPickUp->AttachToComponent(this->RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	//itemsPickUp->AttachToComponent(this->RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    itemsPickUp->SetupAttachment(this->RootComponent);
 	
 }
 

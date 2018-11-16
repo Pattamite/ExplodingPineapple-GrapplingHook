@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
 #include "Engine/Engine.h"
+#include "Math/UnrealMathUtility.h"
 #include "HighScoreSystem.h"
 #include "CurrencySystem.h"
 #include "TestGameMode.generated.h"
@@ -21,7 +22,8 @@ enum class EGameOverEnum : uint8
 {
     GameOver_Default    UMETA(DisplayName = "Default"),
     GameOver_Pitfall	UMETA(DisplayName = "Pitfall"),
-    GameOver_Chaser 	UMETA(DisplayName = "Chaser")
+    GameOver_Chaser 	UMETA(DisplayName = "Chaser"),
+    GameOver_Water      UMETA(DisplayName = "Water")
 };
 
 UCLASS()
@@ -42,6 +44,19 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Currency")
         void AddCoin(int value);
+    UFUNCTION(BlueprintCallable, Category = "Currency")
+        int GetCoin();
+
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        bool IsGamePause();
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        void SetGamePause(bool isPause);
+    UFUNCTION(BlueprintCallable, Category = "Game State")
+        void SetGlobalTime(float value);
+
+    UFUNCTION(BlueprintCallable, Category = "Debug")
+        void GameOver(EGameOverEnum condition);
+
 
     UPROPERTY(BlueprintAssignable, Category = "Score Event")
         FFloatGameModeDelegate OnPassHighScore;
@@ -54,6 +69,8 @@ public:
         FVoidGameModeDelegate OnGameOverByPitfall;
     UPROPERTY(BlueprintAssignable, Category = "Game Event")
         FVoidGameModeDelegate OnGameOverByChaser;
+    UPROPERTY(BlueprintAssignable, Category = "Game Event")
+        FVoidGameModeDelegate OnGameOverByWater;
 
 protected:
     UPROPERTY(BlueprintReadOnly)
@@ -64,8 +81,7 @@ protected:
 private:
     void SetHighScore();
     void CheckHighScore();
-    UFUNCTION(BlueprintCallable, Category = "Debug")
-        void GameOver(EGameOverEnum condition);
+    void UpdateGlobalTime();
     
     APawn* player = nullptr;
     
@@ -76,4 +92,6 @@ private:
     bool isPassHighScoreFirstTime = false;
     bool isGameOver = false;
     int collectedCoin = 0;
+    bool isPause = false;
+    float timeDilation = 1.0f;
 };

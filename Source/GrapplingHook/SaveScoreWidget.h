@@ -29,6 +29,8 @@ public:
         float lastScore;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
         float highScore;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+        TArray<float> scoreBoard;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency")
         int coin;
 

@@ -34,7 +34,7 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	for (int i = 0; i < effects.Num(); i++) {
 		if (effects[i]->IsValidLowLevel()) 
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Effect[i] is valid"));
+			// UE_LOG(LogTemp, Warning, TEXT("Effect[i] is valid"));
 			effects[i]->OnTick(DeltaTime, player);
 		}
 		else 
@@ -55,6 +55,7 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UItemCollector::AddItemEffect(UItemEffect *effect) {
 	UItemEffect *oldEffect = FindEffect(effect->name);
+	UE_LOG(LogTemp, Warning, TEXT("Add item effect with name : %s , %s"), *effect->name, *player->GetFullName());
 	if (oldEffect != nullptr) {
 		oldEffect->OnStart(player);
 		return;

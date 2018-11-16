@@ -31,14 +31,14 @@ UCurrencySaveGame* ACurrencySystem::LoadCurrencySaveGame()
 {
     if (!UGameplayStatics::DoesSaveGameExist(SaveSlotName, UserIndex))
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Currency save Not Found")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Currency save Not Found")));
         CreateNewCurrencySaveGame();
     }
 
     UCurrencySaveGame* LoadGameInstance = Cast<UCurrencySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
     if (LoadGameInstance->IsValidLowLevel())
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Currency save Found")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Currency save Found")));
         return LoadGameInstance;    
     }
 
@@ -55,7 +55,7 @@ void ACurrencySystem::SaveCurrencySaveGame(UCurrencySaveGame* SaveGameInstance)
 
 void ACurrencySystem::CreateNewCurrencySaveGame()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Create new Currency save")));
+    //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Create new Currency save")));
     UCurrencySaveGame* SaveGameInstance = Cast<UCurrencySaveGame>(UGameplayStatics::CreateSaveGameObject(UCurrencySaveGame::StaticClass()));
     SaveCurrencySaveGame(SaveGameInstance);
 }

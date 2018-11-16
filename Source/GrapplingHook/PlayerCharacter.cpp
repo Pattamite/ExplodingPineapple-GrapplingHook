@@ -10,6 +10,8 @@
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "BasePickUpItem.h"
+#include "BasicMapChunk.h"
+#include "TestGameMode.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -69,7 +71,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// declare trigger capsule
 	TriggerCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Trigger Capsule"));
-	TriggerCapsule->InitCapsuleSize(55.f, 90.0f);;
+	TriggerCapsule->InitCapsuleSize(40.f, 40.0f);;
 	TriggerCapsule->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerCapsule->SetupAttachment(RootComponent);
 
@@ -86,7 +88,6 @@ void APlayerCharacter::BeginPlay()
 	myPlayerState = EPlayerState::IDLE;
 	//CurrentState();
 	FindHookShooterComponent();
-	hookShooter->SetHook(FVector(0.f, 0.f, 0.f));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,6 +150,10 @@ void APlayerCharacter::UpdateAnimation()
 	case EPlayerState::NOTUSEHOOKONAIR:
 		desiredAnimation = IdleAnimation;
 		break;
+	case EPlayerState::DIED:
+		// TODO add died animation
+		desiredAnimation = IdleAnimation;
+		break;
 	default:
 		desiredAnimation = IdleAnimation;
 		break;
@@ -162,6 +167,7 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	UpdateCharacter();
+	//UE_LOG(LogTemp, Warning, TEXT("Rotation: %f , %f, %f"), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 }
 
 
@@ -170,12 +176,15 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Note: the 'Jump' action is bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	if (myPlayerState != EPlayerState::DIED)
+	{
+		// Note: the 'Jump' action is bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
+		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+		PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCharacter::TouchStopped);
+		PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCharacter::TouchStarted);
+		PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCharacter::TouchStopped);
+	}
 }
 
 void APlayerCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -216,20 +225,19 @@ void APlayerCharacter::UpdatePlayerState()
 	case EPlayerState::NOTUSEHOOKONAIR:
 		NoHookOnAirState();
 		break;
+	case EPlayerState::DIED:
+		DiedState();
+		break;
 	default:
 		
 		break;
 	}
-	//CurrentState();
 }
 
 void APlayerCharacter::UpdatePlayerRun()
 {
 	const FVector playerVelocity = GetVelocity();
-	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	// Move right endless
 	if (myPlayerState == EPlayerState::RUNNING)
-	//if (GetCharacterMovement()->IsMovingOnGround())
 	{
 		Running();
 	}
@@ -237,7 +245,6 @@ void APlayerCharacter::UpdatePlayerRun()
 	{
 		StopRunning();
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
 }
 
 void APlayerCharacter::CallJump()
@@ -260,7 +267,7 @@ void APlayerCharacter::Running()
 
 void APlayerCharacter::StopRunning()
 {
-	AddMovementInput(FVector(movementSpeed, 0.0f, 0.0f), 0);
+	AddMovementInput(FVector(0.0f, 0.0f, 0.0f), 0);
 	return;
 }
 
@@ -286,8 +293,8 @@ void APlayerCharacter::BounceByPreviousForce()
 	}
 	bounceForce = bounceForce > 0.0f ? minBounceForce : FMath::Clamp(bounceForce, -maxBounceForce, -minBounceForce);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
 }
 
 void APlayerCharacter::BounceByStaticForce()
@@ -298,9 +305,25 @@ void APlayerCharacter::BounceByStaticForce()
 	bounceForce = playerVelocity.X >= 0.0f ? -prevBounceForceAbs : prevBounceForceAbs;
 	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
 	GetCharacterMovement()->AddImpulse(FVector(bounceForce, 0, 0));
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
+	//UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *playerVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Bounce force: %f"), bounceForce);
 	bounceForce = bounceForce * reduceBounceForceRatio;
+}
+
+void APlayerCharacter::PlayerDied()
+{
+	myPlayerState = EPlayerState::DIED;
+	return;
+}
+
+bool APlayerCharacter::IsDead()
+{
+	if (myPlayerState == EPlayerState::DIED)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -337,11 +360,12 @@ void APlayerCharacter::HookOnAirState()
 {
 	if (isOnGround)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
-		OnHitGround(); // Event cut hook
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
+		OnRemoveHook(); // Event cut hook
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
+		//SetActorRotation(new FRotator(0.f, 0.f, 0.f), false);
 		myPlayerState = EPlayerState::RUNNING;
 	}
 
@@ -364,6 +388,21 @@ void APlayerCharacter::NoHookOnAirState()
 	}
 }
 
+void APlayerCharacter::DiedState()
+{
+	GetCharacterMovement()->Velocity = FVector(0.0f, 0.0f, 0.0f);
+	StopRunning();
+	if (isOnHook)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("On hook cut it!"));
+		OnRemoveHook();
+	}
+	else 
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No hook! Died peacefully"));
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Getter
 
@@ -376,21 +415,28 @@ UHookShooter *APlayerCharacter::GetHookShooter()
 // Check overlap trigger
 void APlayerCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO cast item from item base class
-	ABasePickUpItem* pickUpItem = Cast<ABasePickUpItem>(OtherActor);
-
-	// TODO activate item effect
-	// if object is item
-		// activate event of item effect
-		// destroy item
-
-	if (OtherActor && (OtherActor != this) && OtherComp && !(pickUpItem->IsValidLowLevel()))
+	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap Begin"));
-		if (myPlayerState == EPlayerState::USEHOOKONAIR)
+
+		ABasicMapChunk* basicMap = Cast<ABasicMapChunk>(OtherActor);
+		if (basicMap->IsValidLowLevel() && !OtherComp->ComponentHasTag(FName("Hazard")))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
-			AdjustBouncing();
+			if (myPlayerState == EPlayerState::USEHOOKONAIR)
+			{
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player bounce back"));
+				AdjustBouncing();
+			}
+		}
+
+		if (OtherComp->ComponentHasTag(FName("Hazard")))
+		{
+			ATestGameMode* testGameMode = Cast<ATestGameMode>(GetWorld()->GetAuthGameMode());
+			if (testGameMode->IsValidLowLevel())
+			{
+				PlayerDied();
+				testGameMode->GameOver(EGameOverEnum::GameOver_Pitfall);
+			}
 		}
 	}
 }
@@ -399,6 +445,6 @@ void APlayerCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, c
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Overlap End"));
 	}
 }
