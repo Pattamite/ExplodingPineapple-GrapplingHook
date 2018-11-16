@@ -38,7 +38,7 @@ USettingSaveGame* AGameSettingSystem::LoadSettingSaveGame()
 {
     if (!UGameplayStatics::DoesSaveGameExist(SaveSlotName, UserIndex))
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Setting save Not Found")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Setting save Not Found")));
         CreateNewSettingSaveGame();
     }
 
@@ -62,7 +62,7 @@ void AGameSettingSystem::SaveSettingSaveGame(USettingSaveGame* SaveGameInstance)
 
 void AGameSettingSystem::CreateNewSettingSaveGame()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Create new Setting save")));
+    //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Create new Setting save")));
     USettingSaveGame* SaveGameInstance = Cast<USettingSaveGame>(UGameplayStatics::CreateSaveGameObject(USettingSaveGame::StaticClass()));
     SaveSettingSaveGame(SaveGameInstance);
 }
@@ -78,7 +78,7 @@ void AGameSettingSystem::RefreshAllSettingValue()
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't refresh all setting value")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't refresh all setting value")));
     }
 }
 
@@ -125,7 +125,7 @@ void AGameSettingSystem::SaveSfxVolume(float value)
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save SFX Volume")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save SFX Volume")));
     }
 }
 
@@ -141,7 +141,7 @@ void AGameSettingSystem::SaveMusicVolume(float value)
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Music Volume")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Music Volume")));
     }
 }
 
@@ -157,7 +157,7 @@ void AGameSettingSystem::SaveInvertrdControl(bool value)
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Music Volume")));
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Inverted Control")));
     }
 }
 

@@ -45,10 +45,10 @@ TArray<float> AHighScoreSystem::LoadLeaderboard()
         leaderboard = LoadGameInstance->highScore;
     }
 
-    for (int i = 0; i < leaderboardSize; i++)
+    /*for (int i = 0; i < leaderboardSize; i++)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("%d : %f"), i + 1, leaderboard[i]));
-    }
+    }*/
 
     return leaderboard;
 }
@@ -86,12 +86,12 @@ UMySaveGame* AHighScoreSystem::LoadHighScoreSave()
         UMySaveGame* LoadGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
         if (LoadGameInstance->IsValidLowLevel())
         {
-            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HighScore Found")));
+            //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HighScore Found")));
             return LoadGameInstance;
         }
     }
 
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HighScore Not Found")));
+    //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HighScore Not Found")));
     return nullptr;
 }
 
