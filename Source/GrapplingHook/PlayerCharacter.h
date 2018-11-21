@@ -136,8 +136,15 @@ public:
 
 	/** Create trigger capsule */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Trigger Capsule")
-		class UCapsuleComponent* TriggerCapsule;
+	class UCapsuleComponent* TriggerCapsule;
 	/**/
+
+	/** Create player state variable */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+	EPlayerState myPlayerState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	bool useMagnetic = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();
@@ -148,8 +155,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	bool IsDead();
 
-	/*UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
+	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
+	void OnRemoveHook();
 	
 	// declare overlap begin function
 	UFUNCTION()
@@ -158,13 +165,6 @@ public:
 	// declare overlap end function
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	/** Create player state variable */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-	EPlayerState myPlayerState;
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
-	void OnRemoveHook();
 
 	void Running();
 	void Jumping();

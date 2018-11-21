@@ -86,7 +86,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	myPlayerState = EPlayerState::IDLE;
-	//CurrentState();
+	useMagnetic = false;
 	FindHookShooterComponent();
 }
 
