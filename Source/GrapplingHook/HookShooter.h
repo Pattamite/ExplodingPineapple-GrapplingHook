@@ -15,7 +15,7 @@
 #include "HookShooter.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GRAPPLINGHOOK_API UHookShooter : public UActorComponent
 {
 	GENERATED_BODY()
@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnyString")
 	AHook* GetHook();
 
-	UFUNCTION(BlueprintCallable, Category = "AnyString")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AnyString")
 	AHook* ShootHookByDirection(FVector direction, float hookLength);
 	UFUNCTION(BlueprintCallable, Category = "AnyString")
 	AHook* SetHook(FVector location);
