@@ -43,7 +43,7 @@ AHook* UHookShooter::GetHook()
 	return hook;
 }
 
-AHook* UHookShooter::ShootHookByDirection(FVector direction, float hookLength)
+AHook* UHookShooter::ShootHookByDirection_Implementation(FVector direction, float hookLength)
 {
 	direction.Normalize();
 	FVector start = GetOwner()->GetActorLocation();
