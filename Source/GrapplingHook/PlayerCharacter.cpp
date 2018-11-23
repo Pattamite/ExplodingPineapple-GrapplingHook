@@ -132,35 +132,35 @@ void APlayerCharacter::CurrentState()
 // Animation
 
 // Update animation from state 
-void APlayerCharacter::UpdateAnimation()
-{
-	UPaperFlipbook* desiredAnimation = NULL;
-
-	switch (myPlayerState)
-	{
-	case EPlayerState::IDLE:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::RUNNING:
-		desiredAnimation = RunningAnimation;
-		break;
-	case EPlayerState::USEHOOKONAIR:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::NOTUSEHOOKONAIR:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::DIED:
-		// TODO add died animation
-		desiredAnimation = IdleAnimation;
-		break;
-	default:
-		desiredAnimation = IdleAnimation;
-		break;
-	}
-	GetSprite()->SetFlipbook(desiredAnimation);
-	return;
-}
+//void APlayerCharacter::UpdateAnimation()
+//{
+//	UPaperFlipbook* desiredAnimation = NULL;
+//
+//	switch (myPlayerState)
+//	{
+//	case EPlayerState::IDLE:
+//		desiredAnimation = RunningAnimation;
+//		break;
+//	case EPlayerState::RUNNING:
+//		desiredAnimation = RunningAnimation;
+//		break;
+//	case EPlayerState::USEHOOKONAIR:
+//		desiredAnimation = ShootRopeAnimation;
+//		break;
+//	case EPlayerState::NOTUSEHOOKONAIR:
+//		desiredAnimation = RunningAnimation;
+//		break;
+//	case EPlayerState::DIED:
+//		// TODO add died animation
+//		desiredAnimation = RunningAnimation;
+//		break;
+//	default:
+//		desiredAnimation = RunningAnimation;
+//		break;
+//	}
+//	GetSprite()->SetFlipbook(desiredAnimation);
+//	return;
+//}
 
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
@@ -201,7 +201,7 @@ void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const F
 
 void APlayerCharacter::UpdateCharacter()
 {
-	UpdateAnimation();
+	//UpdateAnimation();
 	UpdatePlayerState();
 	UpdatePlayerRun();
 }
@@ -228,6 +228,16 @@ void APlayerCharacter::UpdatePlayerState()
 	case EPlayerState::DIED:
 		DiedState();
 		break;
+	case EPlayerState::JUMPING:
+		//DiedState();
+		Running();
+		break;
+	case EPlayerState::SHOOTING:
+		DiedState();
+		break;
+	case EPlayerState::LANDING:
+		LandingState();
+		break;
 	default:
 		
 		break;
@@ -249,10 +259,12 @@ void APlayerCharacter::UpdatePlayerRun()
 
 void APlayerCharacter::CallJump()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Jumppppp"));
     if (CanJump())
     {
+		pressJump = true;
+		SetPlayerState(EPlayerState::JUMPING);
         ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Jump, this->GetActorLocation());
-        Jump();
     }
 }
 
@@ -272,7 +284,7 @@ void APlayerCharacter::StopRunning()
 }
 
 void APlayerCharacter::Jumping()
-{
+{	
 	Jump();
 	return;
 }
@@ -326,18 +338,24 @@ bool APlayerCharacter::IsDead()
 	return false;
 }
 
+void APlayerCharacter::SetPlayerState(EPlayerState state)
+{
+	myPlayerState = state;
+	UpdateAnimation();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // State transition
 
 void APlayerCharacter::IdleState()
 {
-	if (isOnGround)
+	if (isOnGround && !pressJump)
 	{
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 	else
 	{
-		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 	}
 }
 
@@ -347,11 +365,11 @@ void APlayerCharacter::RunningState()
 	{
 		if (!isOnHook)
 		{
-			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+			SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 		}
 		else
 		{
-			myPlayerState = EPlayerState::USEHOOKONAIR;
+			SetPlayerState(EPlayerState::USEHOOKONAIR);
 		}
 	}
 }
@@ -365,26 +383,49 @@ void APlayerCharacter::HookOnAirState()
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
-		//SetActorRotation(new FRotator(0.f, 0.f, 0.f), false);
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 
 	if (!isOnHook)
 	{
-		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 		bounceForce = maxBounceForce;
 	}
 }
 
 void APlayerCharacter::NoHookOnAirState()
 {
+	const FVector playerVelocity = GetVelocity();
+
+	if (playerVelocity.Z < 0.0f)
+	{
+		SetPlayerState(EPlayerState::LANDING);
+	}
 	if (isOnGround)
 	{
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 	if (isOnHook)
 	{
-		myPlayerState = EPlayerState::USEHOOKONAIR;
+		SetPlayerState(EPlayerState::USEHOOKONAIR);
+	}
+}
+
+void APlayerCharacter::LandingState()
+{
+	const FVector playerVelocity = GetVelocity();
+
+	if (playerVelocity.Z >= 0.0f)
+	{
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
+	}
+	if (isOnGround)
+	{
+		SetPlayerState(EPlayerState::RUNNING);
+	}
+	if (isOnHook)
+	{
+		SetPlayerState(EPlayerState::USEHOOKONAIR);
 	}
 }
 

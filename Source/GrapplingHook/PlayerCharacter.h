@@ -16,9 +16,12 @@ enum class EPlayerState : uint8
 {
 	IDLE UMETA(DisplayName = "Idle"),
 	RUNNING UMETA(DisplayName = "Running"),
+	JUMPING UMETA(DisplayName = "Jumping"),
+	SHOOTING UMETA(DisplayName = "Shooting"),
 	USEHOOKONAIR UMETA(DisplayName = "UseHookOnAir"),
 	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir"),
-	DIED UMETA(DisplayName = "DIED")
+	DIED UMETA(DisplayName = "Died"),
+	LANDING UMETA(DisplayName = "Landing"),
 };
 
 /**
@@ -54,11 +57,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* RunningAnimation;
 
-	// The animation to play while idle (standing still)
+	// The animation to play while shooting rope
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* IdleAnimation;
+	class UPaperFlipbook* ShootRopeAnimation;
+
+	// The animation to play while jumping
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* JumpingAnimation;
+
+	// The animation to play while landing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* LandingAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attribute)
+	bool pressJump = false;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
+	UFUNCTION(BlueprintImplementableEvent, Category = Animations)
 	void UpdateAnimation();
 
 	void UpdateCharacter();
@@ -73,6 +88,7 @@ protected:
 	void HookOnAirState();
 	void NoHookOnAirState();
 	void DiedState();
+	void LandingState();
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -154,6 +170,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	bool IsDead();
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void SetPlayerState(EPlayerState state);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Player")
+	void OnPlayerJump();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
 	void OnRemoveHook();
