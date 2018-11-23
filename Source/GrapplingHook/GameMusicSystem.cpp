@@ -3,6 +3,7 @@
 #include "GameMusicSystem.h"
 
 AGameMusicSystem* AGameMusicSystem::instance = nullptr;
+bool AGameMusicSystem::updateFlag = false;
 
 // Sets default values
 AGameMusicSystem::AGameMusicSystem()
@@ -36,5 +37,15 @@ void AGameMusicSystem::ChangeGameMusicState(EMusicStateEnum state)
     {
         UE_LOG(LogTemp, Error, TEXT("GameMusicSystem : GameMusicSystem instance not found in level."));
     }
+}
+
+bool AGameMusicSystem::GetMusicUpdateFlag()
+{
+    return updateFlag;
+}
+
+void AGameMusicSystem::SetMusicUpdateFlag(bool value)
+{
+    updateFlag = value;
 }
 
