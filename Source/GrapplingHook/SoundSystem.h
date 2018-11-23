@@ -14,6 +14,14 @@ enum class ESoundEffectEnum : uint8
     SFX_Jump    UMETA(DisplayName = "Jump")
 };
 
+UENUM(BlueprintType)
+enum class EUiSoundEnum : uint8
+{
+    UI_ButtonClicked	UMETA(DisplayName = "ButtonClicked"),
+    UI_Select 	        UMETA(DisplayName = "Select"),
+    UI_Deselect        UMETA(DisplayName = "Deselect")
+};
+
 UCLASS()
 class GRAPPLINGHOOK_API ASoundSystem : public AActor
 {
@@ -34,6 +42,10 @@ public:
         static void PlaySoundEffectAtLocation(ESoundEffectEnum sound, FVector location);
     UFUNCTION(BlueprintImplementableEvent, Category = "Sound")
         void PlaySoundEffectAtLocationInstance(ESoundEffectEnum sound, FVector location);
+    UFUNCTION(BlueprintCallable, Category = "Sound")
+        static void PlayUiSound(EUiSoundEnum sound);
+    UFUNCTION(BlueprintImplementableEvent, Category = "Sound")
+        void PlayUiSoundInstance(EUiSoundEnum sound);
 
 private:
     static ASoundSystem* instance;

@@ -39,3 +39,15 @@ void ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum sound, FVector loc
     }
 }
 
+void ASoundSystem::PlayUiSound(EUiSoundEnum sound)
+{
+    if (instance->IsValidLowLevel())
+    {
+        instance->PlayUiSoundInstance(sound);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("SoundSystem : SoundSystem instance not found in level."));
+    }
+}
+
