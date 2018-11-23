@@ -8,9 +8,11 @@ const uint32 AGameSettingSystem::UserIndex = 0;
 float AGameSettingSystem::defaultSfxVolume = 1.0f;
 float AGameSettingSystem::defaultMusicVolume = 1.0f;
 bool AGameSettingSystem::defaultInvertedControl = false;
+float AGameSettingSystem::defaultUiVolume = 1.0f;
 float AGameSettingSystem::currentSfxVolume = defaultSfxVolume;
 float AGameSettingSystem::currentMusicVolume = defaultMusicVolume;
 bool AGameSettingSystem::currentInvertedControl = defaultInvertedControl;
+float AGameSettingSystem::currentUiVolume = defaultUiVolume;
 
 // Sets default values
 AGameSettingSystem::AGameSettingSystem()
@@ -75,6 +77,7 @@ void AGameSettingSystem::RefreshAllSettingValue()
         currentSfxVolume = currentSave->sfxVolume;
         currentMusicVolume = currentSave->musicVolume;
         currentInvertedControl = currentSave->isInvertedControl;
+        currentUiVolume = currentSave->uiVolume;
     }
     else
     {
@@ -97,19 +100,9 @@ bool AGameSettingSystem::LoadInvertrdControl()
     return currentInvertedControl;
 }
 
-void AGameSettingSystem::TempSaveSfxVolume(float value)
+float AGameSettingSystem::LoadUiVolume()
 {
-    currentSfxVolume = value;
-}
-
-void AGameSettingSystem::TempSaveMusicVolume(float value)
-{
-    currentMusicVolume = value;
-}
-
-void AGameSettingSystem::TempSaveInvertrdControl(bool value)
-{
-    currentInvertedControl = value;
+    return currentUiVolume;
 }
 
 void AGameSettingSystem::SaveSfxVolume(float value)
@@ -158,6 +151,22 @@ void AGameSettingSystem::SaveInvertrdControl(bool value)
     else
     {
         //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Inverted Control")));
+    }
+}
+
+void AGameSettingSystem::SaveUiVolume(float value)
+{
+    value = FMath::Clamp<float>(value, 0.0f, 1.0f);
+    USettingSaveGame* currentSave = LoadSettingSaveGame();
+    if (currentSave->IsValidLowLevel())
+    {
+        currentSave->uiVolume = value;
+        SaveSettingSaveGame(currentSave);
+        currentUiVolume = value;
+    }
+    else
+    {
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Music Volume")));
     }
 }
 
