@@ -395,9 +395,7 @@ void APlayerCharacter::HookOnAirState()
 
 void APlayerCharacter::NoHookOnAirState()
 {
-	const FVector playerVelocity = GetVelocity();
-
-	if (playerVelocity.Z < 0.0f)
+	if (GetCharacterMovement()->IsFalling())
 	{
 		SetPlayerState(EPlayerState::LANDING);
 	}
