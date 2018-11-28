@@ -128,40 +128,6 @@ void APlayerCharacter::CurrentState()
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Animation
-
-// Update animation from state 
-//void APlayerCharacter::UpdateAnimation()
-//{
-//	UPaperFlipbook* desiredAnimation = NULL;
-//
-//	switch (myPlayerState)
-//	{
-//	case EPlayerState::IDLE:
-//		desiredAnimation = RunningAnimation;
-//		break;
-//	case EPlayerState::RUNNING:
-//		desiredAnimation = RunningAnimation;
-//		break;
-//	case EPlayerState::USEHOOKONAIR:
-//		desiredAnimation = ShootRopeAnimation;
-//		break;
-//	case EPlayerState::NOTUSEHOOKONAIR:
-//		desiredAnimation = RunningAnimation;
-//		break;
-//	case EPlayerState::DIED:
-//		// TODO add died animation
-//		desiredAnimation = RunningAnimation;
-//		break;
-//	default:
-//		desiredAnimation = RunningAnimation;
-//		break;
-//	}
-//	GetSprite()->SetFlipbook(desiredAnimation);
-//	return;
-//}
-
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -202,7 +168,6 @@ void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const F
 
 void APlayerCharacter::UpdateCharacter()
 {
-	//UpdateAnimation();
 	UpdatePlayerState();
 	UpdatePlayerRun();
 }
@@ -230,11 +195,10 @@ void APlayerCharacter::UpdatePlayerState()
 		DiedState();
 		break;
 	case EPlayerState::JUMPING:
-		//DiedState();
 		Running();
 		break;
 	case EPlayerState::SHOOTING:
-		DiedState();
+		//ShootingState();
 		break;
 	case EPlayerState::LANDING:
 		LandingState();
@@ -379,7 +343,6 @@ void APlayerCharacter::HookOnAirState()
 {
 	if (isOnGround)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
 		OnRemoveHook(); // Event cut hook
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
@@ -396,7 +359,9 @@ void APlayerCharacter::HookOnAirState()
 
 void APlayerCharacter::NoHookOnAirState()
 {
-	if (GetCharacterMovement()->IsFalling())
+	const float zVel = GetVelocity().Z;
+
+	if (zVel < 0.0f)
 	{
 		SetPlayerState(EPlayerState::LANDING);
 	}
@@ -412,7 +377,9 @@ void APlayerCharacter::NoHookOnAirState()
 
 void APlayerCharacter::LandingState()
 {
-	if (GetCharacterMovement()->IsFlying())
+	const float zVel = GetVelocity().Z;
+
+	if (zVel >= 0.0f)
 	{
 		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 	}
@@ -440,6 +407,12 @@ void APlayerCharacter::DiedState()
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No hook! Died peacefully"));
 	}
 }
+
+void APlayerCharacter::ShootingState()
+{
+	
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Getter

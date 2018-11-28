@@ -72,7 +72,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attribute)
 	bool pressJump = false;
 
-	/** Called to choose the correct animation to play based on the character's movement state */
+	/** Update animation event in blueprint */
 	UFUNCTION(BlueprintImplementableEvent, Category = Animations)
 	void UpdateAnimation();
 
@@ -89,6 +89,7 @@ protected:
 	void NoHookOnAirState();
 	void DiedState();
 	void LandingState();
+	void ShootingState();
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
