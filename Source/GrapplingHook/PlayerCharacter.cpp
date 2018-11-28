@@ -167,6 +167,7 @@ void APlayerCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	UpdateCharacter();
+	CurrentState();
 	//UE_LOG(LogTemp, Warning, TEXT("Rotation: %f , %f, %f"), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 }
 
@@ -411,9 +412,7 @@ void APlayerCharacter::NoHookOnAirState()
 
 void APlayerCharacter::LandingState()
 {
-	const FVector playerVelocity = GetVelocity();
-
-	if (playerVelocity.Z >= 0.0f)
+	if (GetCharacterMovement()->IsFlying())
 	{
 		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 	}
