@@ -13,7 +13,8 @@ enum class EMusicStateEnum : uint8
     BGM_Normal	    UMETA(DisplayName = "Normal"),
     BGM_Rush 	    UMETA(DisplayName = "Rush"),
     BGM_Changing    UMETA(DisplayName = "Changing"),
-    BGM_Stop        UMETA(DisplayName = "Stop")
+    BGM_Stop        UMETA(DisplayName = "Stop"),
+    BGM_Menu        UMETA(DisplayName = "Menu")
 };
 
 UCLASS()
@@ -33,14 +34,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    UFUNCTION(BlueprintCallable, Category = "Sound")
+    UFUNCTION(BlueprintCallable, Category = "Music")
         static void ChangeGameMusicState(EMusicStateEnum state);
-    UFUNCTION(BlueprintImplementableEvent, Category = "Sound")
+    UFUNCTION(BlueprintImplementableEvent, Category = "Music")
         void ChangeGameMusicStateInstance(EMusicStateEnum state);
+    UFUNCTION(BlueprintCallable, Category = "Music")
+        static bool GetMusicUpdateFlag();
+    UFUNCTION(BlueprintCallable, Category = "Music")
+        static void SetMusicUpdateFlag(bool value);
+
 
 protected:
     UPROPERTY(BlueprintReadWrite)
         EMusicStateEnum currentMusicState = EMusicStateEnum::BGM_Normal;
+    static bool updateFlag;
 
 private:
     static AGameMusicSystem* instance;

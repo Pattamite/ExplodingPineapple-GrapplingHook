@@ -28,17 +28,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static bool LoadInvertrdControl();
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
-        static void TempSaveSfxVolume(float value);
-    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
-        static void TempSaveMusicVolume(float value);
-    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
-        static void TempSaveInvertrdControl(bool value);
+        static float LoadUiVolume();
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void SaveSfxVolume(float value);
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void SaveMusicVolume(float value);
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void SaveInvertrdControl(bool value);
+    UFUNCTION(BlueprintCallable, Category = "Game Setting System")
+        static void SaveUiVolume(float value);
     UFUNCTION(BlueprintCallable, Category = "Game Setting System")
         static void ResetAllSetting();
     
@@ -62,7 +60,9 @@ private:
     static float currentSfxVolume;
     static float currentMusicVolume;
     static bool currentInvertedControl;
+    static float currentUiVolume;
     static float defaultSfxVolume;
     static float defaultMusicVolume;
     static bool defaultInvertedControl;
+    static float defaultUiVolume;
 };

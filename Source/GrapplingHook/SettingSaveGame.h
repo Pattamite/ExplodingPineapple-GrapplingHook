@@ -24,7 +24,6 @@ public:
         float musicVolume;
     UPROPERTY()
         bool isInvertedControl;
-
-	
-	
+    UPROPERTY()
+        float uiVolume;
 };
