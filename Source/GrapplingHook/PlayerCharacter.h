@@ -16,9 +16,12 @@ enum class EPlayerState : uint8
 {
 	IDLE UMETA(DisplayName = "Idle"),
 	RUNNING UMETA(DisplayName = "Running"),
+	JUMPING UMETA(DisplayName = "Jumping"),
+	SHOOTING UMETA(DisplayName = "Shooting"),
 	USEHOOKONAIR UMETA(DisplayName = "UseHookOnAir"),
 	NOTUSEHOOKONAIR UMETA(DisplayName = "NotUseHookOnAir"),
-	DIED UMETA(DisplayName = "DIED")
+	DIED UMETA(DisplayName = "Died"),
+	LANDING UMETA(DisplayName = "Landing"),
 };
 
 /**
@@ -54,11 +57,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* RunningAnimation;
 
-	// The animation to play while idle (standing still)
+	// The animation to play while shooting rope
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* IdleAnimation;
+	class UPaperFlipbook* ShootRopeAnimation;
 
-	/** Called to choose the correct animation to play based on the character's movement state */
+	// The animation to play while jumping
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* JumpingAnimation;
+
+	// The animation to play while landing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* LandingAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attribute)
+	bool pressJump = false;
+
+	/** Update animation event in blueprint */
+	UFUNCTION(BlueprintImplementableEvent, Category = Animations)
 	void UpdateAnimation();
 
 	void UpdateCharacter();
@@ -73,6 +88,8 @@ protected:
 	void HookOnAirState();
 	void NoHookOnAirState();
 	void DiedState();
+	void LandingState();
+	void ShootingState();
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -136,8 +153,15 @@ public:
 
 	/** Create trigger capsule */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Trigger Capsule")
-		class UCapsuleComponent* TriggerCapsule;
+	class UCapsuleComponent* TriggerCapsule;
 	/**/
+
+	/** Create player state variable */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
+	EPlayerState myPlayerState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	bool useMagnetic = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	UHookShooter* GetHookShooter();
@@ -148,8 +172,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	bool IsDead();
 
-	/*UFUNCTION()
-	void OnOverlapBegin(class UPrimitiveComponent *OverlappedComponent, class AActor* Other, class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void SetPlayerState(EPlayerState state);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Player")
+	void OnPlayerJump();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
+	void OnRemoveHook();
 	
 	// declare overlap begin function
 	UFUNCTION()
@@ -158,13 +188,6 @@ public:
 	// declare overlap end function
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	/** Create player state variable */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum)
-	EPlayerState myPlayerState;
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "AnyString")
-	void OnRemoveHook();
 
 	void Running();
 	void Jumping();
