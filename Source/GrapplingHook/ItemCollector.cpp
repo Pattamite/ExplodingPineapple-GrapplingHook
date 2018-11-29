@@ -57,7 +57,9 @@ void UItemCollector::AddItemEffect(UItemEffect *effect) {
 	UItemEffect *oldEffect = FindEffect(effect->name);
 	UE_LOG(LogTemp, Warning, TEXT("Add item effect with name : %s , %s"), *effect->name, *player->GetFullName());
 	if (oldEffect != nullptr) {
-		oldEffect->OnStart(player);
+		effect->OnStart(player);
+		effects.Remove(oldEffect);
+		effects.Add(effect);
 		return;
 	}
 	effect->OnStart(player);
