@@ -23,8 +23,8 @@ APlayerCharacter::APlayerCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(30.0f);
+	GetCapsuleComponent()->SetCapsuleRadius(30.0f);
 
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -86,7 +86,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	myPlayerState = EPlayerState::IDLE;
-	//CurrentState();
+	useMagnetic = false;
 	FindHookShooterComponent();
 }
 
@@ -128,45 +128,12 @@ void APlayerCharacter::CurrentState()
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Animation
-
-// Update animation from state 
-void APlayerCharacter::UpdateAnimation()
-{
-	UPaperFlipbook* desiredAnimation = NULL;
-
-	switch (myPlayerState)
-	{
-	case EPlayerState::IDLE:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::RUNNING:
-		desiredAnimation = RunningAnimation;
-		break;
-	case EPlayerState::USEHOOKONAIR:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::NOTUSEHOOKONAIR:
-		desiredAnimation = IdleAnimation;
-		break;
-	case EPlayerState::DIED:
-		// TODO add died animation
-		desiredAnimation = IdleAnimation;
-		break;
-	default:
-		desiredAnimation = IdleAnimation;
-		break;
-	}
-	GetSprite()->SetFlipbook(desiredAnimation);
-	return;
-}
-
 void APlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
 	UpdateCharacter();
+	CurrentState();
 	//UE_LOG(LogTemp, Warning, TEXT("Rotation: %f , %f, %f"), GetActorRotation().Pitch, GetActorRotation().Yaw, GetActorRotation().Roll);
 }
 
@@ -201,7 +168,6 @@ void APlayerCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const F
 
 void APlayerCharacter::UpdateCharacter()
 {
-	UpdateAnimation();
 	UpdatePlayerState();
 	UpdatePlayerRun();
 }
@@ -228,6 +194,15 @@ void APlayerCharacter::UpdatePlayerState()
 	case EPlayerState::DIED:
 		DiedState();
 		break;
+	case EPlayerState::JUMPING:
+		Running();
+		break;
+	case EPlayerState::SHOOTING:
+		//ShootingState();
+		break;
+	case EPlayerState::LANDING:
+		LandingState();
+		break;
 	default:
 		
 		break;
@@ -249,10 +224,12 @@ void APlayerCharacter::UpdatePlayerRun()
 
 void APlayerCharacter::CallJump()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Jumppppp"));
     if (CanJump())
     {
+		pressJump = true;
+		SetPlayerState(EPlayerState::JUMPING);
         ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Jump, this->GetActorLocation());
-        Jump();
     }
 }
 
@@ -272,7 +249,7 @@ void APlayerCharacter::StopRunning()
 }
 
 void APlayerCharacter::Jumping()
-{
+{	
 	Jump();
 	return;
 }
@@ -326,18 +303,24 @@ bool APlayerCharacter::IsDead()
 	return false;
 }
 
+void APlayerCharacter::SetPlayerState(EPlayerState state)
+{
+	myPlayerState = state;
+	UpdateAnimation();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // State transition
 
 void APlayerCharacter::IdleState()
 {
-	if (isOnGround)
+	if (isOnGround && !pressJump)
 	{
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 	else
 	{
-		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 	}
 }
 
@@ -347,11 +330,11 @@ void APlayerCharacter::RunningState()
 	{
 		if (!isOnHook)
 		{
-			myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+			SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 		}
 		else
 		{
-			myPlayerState = EPlayerState::USEHOOKONAIR;
+			SetPlayerState(EPlayerState::USEHOOKONAIR);
 		}
 	}
 }
@@ -360,31 +343,53 @@ void APlayerCharacter::HookOnAirState()
 {
 	if (isOnGround)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit ground during using hook, CUT!!!"));
 		OnRemoveHook(); // Event cut hook
 
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
-		//SetActorRotation(new FRotator(0.f, 0.f, 0.f), false);
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 
 	if (!isOnHook)
 	{
-		myPlayerState = EPlayerState::NOTUSEHOOKONAIR;
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
 		bounceForce = maxBounceForce;
 	}
 }
 
 void APlayerCharacter::NoHookOnAirState()
 {
+	const float zVel = GetVelocity().Z;
+
+	if (zVel < 0.0f)
+	{
+		SetPlayerState(EPlayerState::LANDING);
+	}
 	if (isOnGround)
 	{
-		myPlayerState = EPlayerState::RUNNING;
+		SetPlayerState(EPlayerState::RUNNING);
 	}
 	if (isOnHook)
 	{
-		myPlayerState = EPlayerState::USEHOOKONAIR;
+		SetPlayerState(EPlayerState::USEHOOKONAIR);
+	}
+}
+
+void APlayerCharacter::LandingState()
+{
+	const float zVel = GetVelocity().Z;
+
+	if (zVel >= 0.0f)
+	{
+		SetPlayerState(EPlayerState::NOTUSEHOOKONAIR);
+	}
+	if (isOnGround)
+	{
+		SetPlayerState(EPlayerState::RUNNING);
+	}
+	if (isOnHook)
+	{
+		SetPlayerState(EPlayerState::USEHOOKONAIR);
 	}
 }
 
@@ -402,6 +407,12 @@ void APlayerCharacter::DiedState()
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No hook! Died peacefully"));
 	}
 }
+
+void APlayerCharacter::ShootingState()
+{
+	
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Getter
