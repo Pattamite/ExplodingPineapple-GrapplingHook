@@ -17,6 +17,15 @@ enum class EMusicStateEnum : uint8
     BGM_Menu        UMETA(DisplayName = "Menu")
 };
 
+UENUM(BlueprintType)
+enum class EAmbientSoundStateEnum : uint8
+{
+    ABS_Stop	        UMETA(DisplayName = "Stop"),
+    ABS_Cave	        UMETA(DisplayName = "Cave"),
+    ABS_CristalCave	    UMETA(DisplayName = "Cristal Cave"),
+    ABS_Forest	        UMETA(DisplayName = "Forest"),
+};
+
 UCLASS()
 class GRAPPLINGHOOK_API AGameMusicSystem : public AActor
 {
@@ -38,6 +47,10 @@ public:
         static void ChangeGameMusicState(EMusicStateEnum state);
     UFUNCTION(BlueprintImplementableEvent, Category = "Music")
         void ChangeGameMusicStateInstance(EMusicStateEnum state);
+    UFUNCTION(BlueprintCallable, Category = "Ambient Sound")
+        static void ChangeAmbientSoundState(EAmbientSoundStateEnum state);
+    UFUNCTION(BlueprintImplementableEvent, Category = "Ambient Sound")
+        void ChangeAmbientSoundStateInstance(EAmbientSoundStateEnum state);
     UFUNCTION(BlueprintCallable, Category = "Music")
         static bool GetMusicUpdateFlag();
     UFUNCTION(BlueprintCallable, Category = "Music")
@@ -47,6 +60,8 @@ public:
 protected:
     UPROPERTY(BlueprintReadWrite)
         EMusicStateEnum currentMusicState = EMusicStateEnum::BGM_Normal;
+    UPROPERTY(BlueprintReadWrite)
+        EAmbientSoundStateEnum currentAmbientSoundStateState = EAmbientSoundStateEnum::ABS_Stop;
     static bool updateFlag;
 
 private:

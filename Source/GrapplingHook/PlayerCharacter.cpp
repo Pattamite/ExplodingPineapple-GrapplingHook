@@ -317,6 +317,7 @@ void APlayerCharacter::IdleState()
 	if (isOnGround && !pressJump)
 	{
 		SetPlayerState(EPlayerState::RUNNING);
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Landing, this->GetActorLocation());
 	}
 	else
 	{
@@ -348,6 +349,7 @@ void APlayerCharacter::HookOnAirState()
 		float walkingSpeed = GetCharacterMovement()->MaxWalkSpeed;
 		GetCharacterMovement()->Velocity = FVector(walkingSpeed, 0.0f, 0.0f);
 		SetPlayerState(EPlayerState::RUNNING);
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Landing, this->GetActorLocation());
 	}
 
 	if (!isOnHook)
@@ -368,6 +370,7 @@ void APlayerCharacter::NoHookOnAirState()
 	if (isOnGround)
 	{
 		SetPlayerState(EPlayerState::RUNNING);
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Landing, this->GetActorLocation());
 	}
 	if (isOnHook)
 	{
@@ -386,6 +389,7 @@ void APlayerCharacter::LandingState()
 	if (isOnGround)
 	{
 		SetPlayerState(EPlayerState::RUNNING);
+        ASoundSystem::PlaySoundEffectAtLocation(ESoundEffectEnum::SFX_Landing, this->GetActorLocation());
 	}
 	if (isOnHook)
 	{

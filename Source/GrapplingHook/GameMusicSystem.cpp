@@ -39,6 +39,18 @@ void AGameMusicSystem::ChangeGameMusicState(EMusicStateEnum state)
     }
 }
 
+void AGameMusicSystem::ChangeAmbientSoundState(EAmbientSoundStateEnum state)
+{
+    if (instance->IsValidLowLevel())
+    {
+        instance->ChangeAmbientSoundStateInstance(state);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("GameMusicSystem : GameMusicSystem instance not found in level."));
+    }
+}
+
 bool AGameMusicSystem::GetMusicUpdateFlag()
 {
     return updateFlag;
