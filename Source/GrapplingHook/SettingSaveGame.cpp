@@ -8,4 +8,5 @@ USettingSaveGame::USettingSaveGame()
     musicVolume = 1.0f;
     isInvertedControl = false;
     uiVolume = 1.0f;
+    ambientVolume = 1.0f;
 }

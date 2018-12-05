@@ -9,10 +9,12 @@ float AGameSettingSystem::defaultSfxVolume = 1.0f;
 float AGameSettingSystem::defaultMusicVolume = 1.0f;
 bool AGameSettingSystem::defaultInvertedControl = false;
 float AGameSettingSystem::defaultUiVolume = 1.0f;
+float AGameSettingSystem::defaultAmbientSoundVolume = 1.0f;
 float AGameSettingSystem::currentSfxVolume = defaultSfxVolume;
 float AGameSettingSystem::currentMusicVolume = defaultMusicVolume;
 bool AGameSettingSystem::currentInvertedControl = defaultInvertedControl;
 float AGameSettingSystem::currentUiVolume = defaultUiVolume;
+float AGameSettingSystem::currentAmbientSoundVolume = defaultAmbientSoundVolume;
 
 // Sets default values
 AGameSettingSystem::AGameSettingSystem()
@@ -78,6 +80,7 @@ void AGameSettingSystem::RefreshAllSettingValue()
         currentMusicVolume = currentSave->musicVolume;
         currentInvertedControl = currentSave->isInvertedControl;
         currentUiVolume = currentSave->uiVolume;
+        currentAmbientSoundVolume = currentSave->ambientVolume;
     }
     else
     {
@@ -103,6 +106,11 @@ bool AGameSettingSystem::LoadInvertrdControl()
 float AGameSettingSystem::LoadUiVolume()
 {
     return currentUiVolume;
+}
+
+float AGameSettingSystem::LoadAmbientSoundVolume()
+{
+    return currentAmbientSoundVolume;
 }
 
 void AGameSettingSystem::SaveSfxVolume(float value)
@@ -163,6 +171,22 @@ void AGameSettingSystem::SaveUiVolume(float value)
         currentSave->uiVolume = value;
         SaveSettingSaveGame(currentSave);
         currentUiVolume = value;
+    }
+    else
+    {
+        //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Can't Save Music Volume")));
+    }
+}
+
+void AGameSettingSystem::SaveAmbientSoundVolume(float value)
+{
+    value = FMath::Clamp<float>(value, 0.0f, 1.0f);
+    USettingSaveGame* currentSave = LoadSettingSaveGame();
+    if (currentSave->IsValidLowLevel())
+    {
+        currentSave->ambientVolume = value;
+        SaveSettingSaveGame(currentSave);
+        currentAmbientSoundVolume = value;
     }
     else
     {
