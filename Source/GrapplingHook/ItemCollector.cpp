@@ -40,6 +40,8 @@ void UItemCollector::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		else 
 		{
 			UE_LOG(LogTemp, Error, TEXT("Effect[i] is null"));
+			removeEffects.Add(effects[i]);
+			continue;
 		}
 
 		if (effects[i]->DecreaseTime(DeltaTime)) {
