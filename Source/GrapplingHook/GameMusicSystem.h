@@ -14,7 +14,9 @@ enum class EMusicStateEnum : uint8
     BGM_Rush 	    UMETA(DisplayName = "Rush"),
     BGM_Changing    UMETA(DisplayName = "Changing"),
     BGM_Stop        UMETA(DisplayName = "Stop"),
-    BGM_Menu        UMETA(DisplayName = "Menu")
+    BGM_Menu        UMETA(DisplayName = "Menu"),
+    BGM_Intro       UMETA(DisplayName = "Intro"),
+    BGM_Loop        UMETA(DisplayName = "Loop")
 };
 
 UENUM(BlueprintType)
